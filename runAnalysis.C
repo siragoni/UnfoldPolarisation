@@ -184,12 +184,12 @@ void runAnalysis(Int_t opt)
       // alienHandler->SetGridDataDir("/alice/sim/2018/LHC18l7/kCohJpsiToMuNP/");
   	  alienHandler->SetDataPattern("*AOD/*AliAOD.root");
       // for( Int_t iRunLHC18l7 = 20; iRunLHC18l7 <  229; iRunLHC18l7++){
-      // for( Int_t iRunLHC18l7 = 0; iRunLHC18l7 <  228; iRunLHC18l7++){
-      //   // if ( listOfGoodRunNumbersLHC18l7[iRunLHC18l7] == 296269 ) continue;
-      //   alienHandler->AddRunNumber( listOfGoodRunNumbersLHC18l7[iRunLHC18l7] );
-      // }
+      for( Int_t iRunLHC18l7 = 0; iRunLHC18l7 <  228; iRunLHC18l7++){
+        // if ( listOfGoodRunNumbersLHC18l7[iRunLHC18l7] == 296269 ) continue;
+        alienHandler->AddRunNumber( listOfGoodRunNumbersLHC18l7[iRunLHC18l7] );
+      }
 
-      alienHandler->AddRunNumber(295829);
+      // alienHandler->AddRunNumber(295829);
 
 
 
