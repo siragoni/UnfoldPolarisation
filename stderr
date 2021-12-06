@@ -1,0 +1,5 @@
+211206 19:02:01 4038 Xrd: XrdClientMessage::ReadRaw: Failed to read header (8 bytes).
+211206 19:04:53 4041 Xrd: ReadPartialAnswer: Failed to read msg from connmgr (server [pcapiserv08.cern.ch:10000]). Retrying ...
+211206 19:04:53 4041 Xrd: HandleServerError: Communication error with server [pcapiserv08.cern.ch:10000]. Rebouncing here.
+211206 19:04:59 4041 Xrd: CheckErrorStatus: Server [pcapiserv08.cern.ch:10000] declared: Unable to execute - session invalid - cannot decrypt magic token ; Invalid argument(error code: 3005)
+Warning [Mon Dec  6 19:04:59 2021] GCLIENT::Reconnect
