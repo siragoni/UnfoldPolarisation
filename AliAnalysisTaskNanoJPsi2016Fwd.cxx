@@ -173,8 +173,8 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserCreateOutputObjects()
   //output tree
   ////////////////////////////////////////
   fAnaTree = new TTree("fOutputTree", "fOutputTree");
-  fAnaTree ->Branch("fRunNum", &fRunNum, "fRunNum/I");
-  fAnaTree ->Branch("fL0inputs", &fL0inputs, "fL0inputs/i");
+  // fAnaTree ->Branch("fRunNum", &fRunNum, "fRunNum/I");
+  // fAnaTree ->Branch("fL0inputs", &fL0inputs, "fL0inputs/i");
   // fAnaTree ->Branch("fAnaType", &fAnaType, "fAnaType/I");
   // fAnaTree ->Branch("fGoodPosTrk", &fGoodPosTrk, "fGoodPosTrk/I");
   // fAnaTree ->Branch("fGoodNegTrk", &fGoodNegTrk, "fGoodNegTrk/I");
@@ -186,18 +186,18 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserCreateOutputObjects()
 
 
 
-  fAnaTree ->Branch("fV0ADecision",   &fV0ADecision,   "fV0ADecision/I");
-  fAnaTree ->Branch("fV0CDecision",   &fV0CDecision,   "fV0CDecision/I");
-  fAnaTree ->Branch("fADADecision",   &fADADecision,   "fADADecision/I");
-  fAnaTree ->Branch("fADCDecision",   &fADCDecision,   "fADCDecision/I");
-  fAnaTree ->Branch("fV0TotalNCells", &fV0TotalNCells, "fV0TotalNCells/I");
+  // fAnaTree ->Branch("fV0ADecision",   &fV0ADecision,   "fV0ADecision/I");
+  // fAnaTree ->Branch("fV0CDecision",   &fV0CDecision,   "fV0CDecision/I");
+  // fAnaTree ->Branch("fADADecision",   &fADADecision,   "fADADecision/I");
+  // fAnaTree ->Branch("fADCDecision",   &fADCDecision,   "fADCDecision/I");
+  // fAnaTree ->Branch("fV0TotalNCells", &fV0TotalNCells, "fV0TotalNCells/I");
 
 
 
   // fAnaTree ->Branch("fTrkPt1", &fTrkPt1, "fTrkPt1/D");
   // fAnaTree ->Branch("fTrkPt2", &fTrkPt2, "fTrkPt2/D");
-  fAnaTree ->Branch("fTrkEta1", &fTrkEta1, "fTrkEta1/D");
-  fAnaTree ->Branch("fTrkEta2", &fTrkEta2, "fTrkEta2/D");
+  // fAnaTree ->Branch("fTrkEta1", &fTrkEta1, "fTrkEta1/D");
+  // fAnaTree ->Branch("fTrkEta2", &fTrkEta2, "fTrkEta2/D");
   // fAnaTree ->Branch("fTrkPhi1", &fTrkPhi1, "fTrkPhi1/D");
   // fAnaTree ->Branch("fTrkPhi2", &fTrkPhi2, "fTrkPhi2/D");
   // fAnaTree ->Branch("fTrkQ1", &fTrkQ1, "fTrkQ1/D");
@@ -437,6 +437,22 @@ void AliAnalysisTaskNanoJPsi2016Fwd::GetMCInfo()
   AliMCEvent *mc_data = dynamic_cast<AliMCEvent*>(MCEvent());
   if (!mc_data) {
     cout << "No MC data found" << endl;
+    fMCTrkTrkPt = -1;
+    fMCTrkTrkPhi = -999;
+    fMCTrkTrkY = -999;
+    fMCTrkTrkM = -1;
+    fMCCosThetaHE   = -999;
+    fMCCosThetaCS   = -999;
+    fMCPhiHE        = -999;
+    fMCPhiCS        = -999;
+    fMCTildePhiHEpos  = -999;
+    fMCTildePhiHEneg  = -999;
+    fMCTildePhiCSpos  = -999;
+    fMCTildePhiCSneg  = -999;
+    fAnaTreeMC->Fill();
+
+    PostData(3, fAnaTreeMC);
+
     return;
   }
 
@@ -444,6 +460,21 @@ void AliAnalysisTaskNanoJPsi2016Fwd::GetMCInfo()
     AliAODMCParticle *mcParticle  = (AliAODMCParticle*)mc_data->GetTrack(iPart);
     if (!mcParticle) {
       AliError(Form("Could not receive track %d", iPart));
+      fMCTrkTrkPt = -1;
+      fMCTrkTrkPhi = -999;
+      fMCTrkTrkY = -999;
+      fMCTrkTrkM = -1;
+      fMCCosThetaHE   = -999;
+      fMCCosThetaCS   = -999;
+      fMCPhiHE        = -999;
+      fMCPhiCS        = -999;
+      fMCTildePhiHEpos  = -999;
+      fMCTildePhiHEneg  = -999;
+      fMCTildePhiCSpos  = -999;
+      fMCTildePhiCSneg  = -999;
+      fAnaTreeMC->Fill();
+      PostData(3, fAnaTreeMC);
+
       continue;
     }
     // if (  mcParticle->Charge()    == 0) continue;
@@ -454,6 +485,19 @@ void AliAnalysisTaskNanoJPsi2016Fwd::GetMCInfo()
     Short_t  charge = mcParticle->Charge();
     Int_t    pdg    = mcParticle->PdgCode();
     if (  (pdg > 21) && (pdg < 24) ) {
+      fMCTrkTrkPt = -1;
+      fMCTrkTrkPhi = -999;
+      fMCTrkTrkY = -999;
+      fMCTrkTrkM = -1;
+      fMCCosThetaHE   = -999;
+      fMCCosThetaCS   = -999;
+      fMCPhiHE        = -999;
+      fMCPhiCS        = -999;
+      fMCTildePhiHEpos  = -999;
+      fMCTildePhiHEneg  = -999;
+      fMCTildePhiCSpos  = -999;
+      fMCTildePhiCSneg  = -999;
+      fAnaTreeMC->Fill();
       PostData(3, fAnaTreeMC);
       return;
     }
@@ -552,9 +596,24 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
   fCounterH->Fill(iSelectionCounter); // entering UserExec
   iSelectionCounter++;
 
+  fCosThetaHE   = -999;
+  fCosThetaCS   = -999;
+  fPhiHE        = -999;
+  fPhiCS        = -999;
+  fTildePhiHEpos  = -999;
+  fTildePhiHEneg  = -999;
+  fTildePhiCSpos  = -999;
+  fTildePhiCSneg  = -999;
+  fTrkTrkPt = -10;
+  fTrkTrkPhi = -10;
+  fTrkTrkY = -10;
+  fTrkTrkM = -10;
+
+
   // get AOD event
   fAOD = dynamic_cast<AliAODEvent*>(InputEvent());
   if(!fAOD) {
+    fAnaTree->Fill();
     PostData(1, fAnaTree);
     PostData(2, fOutputList);
     return;
@@ -578,6 +637,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
     CheckTrigger(isTriggered);
   }
   if (!isTriggered[0]) {
+    fAnaTree->Fill();
     PostData(1, fAnaTree);
     PostData(2, fOutputList);
     return;
@@ -598,6 +658,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
   //are there tracks at all?
   Int_t nTracks(fAOD->GetNumberOfTracks());
   if(nTracks<1) {
+    fAnaTree->Fill();
     PostData(1, fAnaTree);
     PostData(2, fOutputList);
     return;
@@ -652,6 +713,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
 
   // check valid analysis type
   if ( fAnaType == -1 ) {
+    fAnaTree->Fill();
     PostData(1, fAnaTree);
     PostData(2, fOutputList);
     delete [] idxNegTrk;
@@ -709,6 +771,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
   // V0
   AliVVZERO *dataVZERO = dynamic_cast<AliVVZERO*>(fAOD->GetVZEROData());
   if(!dataVZERO) {
+    fAnaTree->Fill();
     PostData(1, fAnaTree);
     PostData(2, fOutputList);
     return;
@@ -718,6 +781,7 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
   // check AD
   AliVAD *dataAD = dynamic_cast<AliVAD*>(fAOD->GetADData());
   if(!dataAD){
+    fAnaTree->Fill();
     PostData(1, fAnaTree);
     PostData(2, fOutputList);
     return;

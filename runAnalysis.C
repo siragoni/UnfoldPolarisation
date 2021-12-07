@@ -23,15 +23,15 @@ void runAnalysis(Int_t opt)
   /**
    * RUN ON GRIDTEST:
    */
-  Bool_t local    = kFALSE;
-  Bool_t gridTest = kTRUE;
+  // Bool_t local    = kFALSE;
+  // Bool_t gridTest = kTRUE;
 
 
   /**
    * FULL GRID MOD:
    */
-  // Bool_t local    = kFALSE;
-  // Bool_t gridTest = kFALSE;
+  Bool_t local    = kFALSE;
+  Bool_t gridTest = kFALSE;
 
 
 
@@ -230,7 +230,7 @@ void runAnalysis(Int_t opt)
         TString LHC18l7("LHC18l7");
         TString LHC16b2("LHC16b2a");
         // define the output folders
-        alienHandler->SetGridWorkingDir("MC_LHC18l7_2D_4");
+        alienHandler->SetGridWorkingDir("MC_LHC18l7_corr");
         alienHandler->SetGridOutputDir(LHC18l7.Data());
         // alienHandler->SetGridOutputDir(LHC18l7.Data());
 
