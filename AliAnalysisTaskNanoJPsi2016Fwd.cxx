@@ -806,6 +806,16 @@ void AliAnalysisTaskNanoJPsi2016Fwd::UserExec(Option_t *)
 
 
 
+  if( (fV0TotalNCells > 2) ||
+      (fADADecision != 0)  ||
+      (fADCDecision != 0)  ||
+      (fV0ADecision != 0)  ||
+      !(fV0CDecision == 0 || fV0CDecision == 1) ){
+    fAnaTree->Fill();
+    PostData(1, fAnaTree);
+    PostData(2, fOutputList);
+    return;
+  }
 
 
 
