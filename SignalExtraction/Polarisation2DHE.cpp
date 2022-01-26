@@ -50,7 +50,8 @@ TDirectory* dirMC[8];
 TList*      listings;
 TList*      listingsMC[8];
 TH1F *fInvariantMassDistributionH = 0x0;
-
+TFile*  parsedMC;
+TFile*  parsedData;
 
 /* - Functions used for the fit!!
  * -
@@ -126,18 +127,20 @@ double fsum(double *x, double *par){
 void fCrystalBallFitJPsi(TH1F* histoToBeFit)//, Double_t &bookKeeping[5])
 {
   TF1* CBfit     = new TF1("CBfit","crystalball",2,15);
-  // TF1* CBfit     = new TF1("CBfit","crystalball",1.8,7);
   CBfit       ->SetParameter(0,1);
-  // CBfit       ->SetParameter(3,1.08);
+  // CBfit       ->FixParameter(3,1.08);
+  // CBfit       ->SetParameter(4,115);
+  // CBfit       ->SetParLimits(4,110,120);
+  // CBfit       ->SetParameter(2,0.090);
+  // CBfit       ->SetParameter(1,3.115);
+  // CBfit       ->SetParLimits(1,3.113,3.17);
   CBfit       ->FixParameter(3,1.08);
-  CBfit       ->SetParameter(4,115);
-  // CBfit       ->SetParameter(4,6);
-  CBfit       ->SetParLimits(4,110,120);
-  // CBfit       ->SetParLimits(4,1,12);
-  // CBfit       ->SetParLimits(4,12,99999999);
+  CBfit       ->SetParameter(4,20);
+  CBfit       ->SetParLimits(4,4,120);
   CBfit       ->SetParameter(2,0.090);
   CBfit       ->SetParameter(1,3.115);
-  CBfit       ->SetParLimits(1,3.113,3.17);
+  CBfit       ->SetParLimits(1,3.,3.2);
+
   CBfit       ->SetNpx(1000);
   TCanvas*    JPsiCanvas = new TCanvas( "JPsiCanvas", "JPsiCanvas", 900, 800 );
   CBfit       ->Draw();
@@ -220,13 +223,12 @@ void fBkgPolFit(TH1F* histoToBeFit)//, Double_t &bookKeeping[5])
  */
 void fitJPsiTemplateMC(const int selectionFlag = 0, const int selectionFlag2 = 0){
 
-  // if ( selectionFlag != 0 ) {
-  //   fCohJpsiToMu = (TH1F*)listingsMC[0]->FindObject( Form( "fInvariantMassDistributionOnlyCosThetaForSignalExtractionHelicityFrameH_%d", selectionFlag ) );
-  // } else {
-  //   fCohJpsiToMu = (TH1F*)listingsMC[0]->FindObject("fInvariantMassDistributionH");
-  // }
-  fCohJpsiToMu        = (TH1F*)listingsMC[0]->FindObject(Form("fInvariantMassDistributionForSignalExtractionHelicityFrameMyBinningH_%d_%d", selectionFlag, selectionFlag2));
-  // fCohPsi2sToMu       = (TH1F*)listingsMC[1]->FindObject(Form("fInvariantMassDistributionForSignalExtractionHelicityFrameMyBinningH_%d_%d", selectionFlag, selectionFlag2));
+  if (        selectionFlag != 0 ) {
+    fCohJpsiToMu = (TH1F*)parsedMC->Get( Form( "InvMassH_%d_%d", selectionFlag, selectionFlag2 ) );
+  } else {
+    fCohJpsiToMu = (TH1F*)parsedMC->Get( "InvMassH_15_10"  );
+  }
+  // fCohJpsiToMu        = (TH1F*)listingsMC[0]->FindObject(Form("fInvariantMassDistributionForSignalExtractionHelicityFrameMyBinningH_%d_%d", selectionFlag, selectionFlag2));
   fCohPsi2sToMu       = (TH1F*)listingsMC[1]->FindObject("fInvariantMassDistributionH");
   fCohPsi2sToMuPi     = (TH1F*)listingsMC[2]->FindObject("fInvariantMassDistributionH");
   fIncohJpsiToMu      = (TH1F*)listingsMC[3]->FindObject("fInvariantMassDistributionH");
@@ -291,8 +293,31 @@ void fitJPsiTemplate( const int selectionFlag, const int selectionFlag2, Int_t S
 
   // TH1F *fInvariantMassDistributionH = 0x0;
   fInvariantMassDistributionH = 0x0;
-  fInvariantMassDistributionH = (TH1F*)listings->FindObject(Form("fInvariantMassDistributionForSignalExtractionHelicityFrameMyBinningH_%d_%d", selectionFlag, selectionFlag2));
+  // fInvariantMassDistributionH = (TH1F*)listings->FindObject(Form("fInvariantMassDistributionForSignalExtractionHelicityFrameMyBinningH_%d_%d", selectionFlag, selectionFlag2));
+  if (        selectionFlag != 0 ) {
+    fInvariantMassDistributionH = (TH1F*)fileList->Get( Form( "InvMassH_%d_%d", selectionFlag, selectionFlag2 ) );
+  } else {
+    fInvariantMassDistributionH = (TH1F*)fileList->Get( "InvMassH_15_10"  );
+  }
+
   fInvariantMassDistributionH->Rebin(5);
+  // if((selectionFlag == 4 || selectionFlag == 18 || selectionFlag == 19) && selectionFlag2 == 0) {
+  if((selectionFlag == 4  || selectionFlag == 19) && selectionFlag2 == 0) {
+    fInvariantMassDistributionH->Rebin(2);
+  }
+  // if((selectionFlag == 7 ) && selectionFlag2 == 4) {
+  //   fInvariantMassDistributionH->Rebin(2);
+  // }
+  // if((selectionFlag == 8 ) && selectionFlag2 == 2) {
+  //   fInvariantMassDistributionH->Rebin(2);
+  // }
+  // if((selectionFlag == 9 ) && selectionFlag2 == 1) {
+  //   fInvariantMassDistributionH->Rebin(2);
+  // }
+  // if((selectionFlag == 11 ) && selectionFlag2 == 22) {
+  //   fInvariantMassDistributionH->Rebin(2);
+  // }
+
   // fInvariantMassDistributionH->Rebin(4);
   // if( selectionFlag < 16 || selectionFlag > 23 ) {
   //   fInvariantMassDistributionH->Rebin(2);
@@ -377,6 +402,16 @@ void fitJPsiTemplate( const int selectionFlag, const int selectionFlag2, Int_t S
   fFitInvMass->SetParLimits(15, 0.001, 9999999999);
   fFitInvMass->SetParLimits(16, 0.001, 9999999999);
   fFitInvMass->SetParLimits(17, 0.001, 9999999999);
+  if(selectionFlag == 14 && selectionFlag2 == 18) {
+    fFitInvMass->SetParameter(15, 100);
+    fFitInvMass->SetParLimits(15, 50, 9999999999);
+  } else if((selectionFlag == 4 || selectionFlag == 18 || selectionFlag == 19) && selectionFlag2 == 0) {
+    fFitInvMass->SetParameter(15, 25);
+    fFitInvMass->SetParLimits(15, 10, 9999999999);
+  } else {
+    fFitInvMass->SetParameter(15, 1);
+  }
+
   fFitInvMass->Print();
   for(Int_t i = 0; i < 18; i++) cout << fFitInvMass->GetParameter(i) << endl << flush;
 
@@ -464,8 +499,25 @@ void fitJPsiTemplate( const int selectionFlag, const int selectionFlag2, Int_t S
   latex->SetTextSize(0.045);
   // latex->DrawLatex(0.55,0.84,"UPC, #it{L} = 235 ub^{-1}");
   latex->DrawLatex(0.55,0.84,"UPC, Run 2 dataset, HE");
-  latex->DrawLatex(0.55,0.78,Form("#color[2]{%.3f < cos(#theta) < %.3f}", MyVariableCosThetaBinning2[selectionFlag] , MyVariableCosThetaBinning2[selectionFlag+1]));
-  latex->DrawLatex(0.55,0.72,Form("#color[4]{%.3f < #phi < %.3f}",        MyVariablePhiBinning2[selectionFlag2] ,     MyVariablePhiBinning2[selectionFlag2+1]    ));
+  latex->DrawLatex(0.55,0.78,Form("#color[2]{%.3f < cos(#theta) < %.3f}",  (-1.+(((Double_t) selectionFlag)*(0.08+0.01/3.))), (-1.+((((Double_t) selectionFlag) + 1.)*(0.08+0.01/3.)))));
+  // latex->DrawLatex(0.55,0.78,Form("#color[2]{%.3f < cos(#theta) < %.3f}", MyVariableCosThetaBinning2[selectionFlag] , MyVariableCosThetaBinning2[selectionFlag+1]));
+  // latex->DrawLatex(0.55,0.72,Form("#color[4]{%.3f < #phi < %.3f}",        MyVariablePhiBinning2[selectionFlag2] ,     MyVariablePhiBinning2[selectionFlag2+1]    ));
+  Int_t N = 1;
+    if( selectionFlag == 0  || selectionFlag == 1  || selectionFlag == 2  || selectionFlag == 3  ||
+        selectionFlag == 4  || selectionFlag == 23 || selectionFlag == 22 || selectionFlag == 21 ||
+        selectionFlag == 20 || selectionFlag == 19 )
+    {
+      N = 1;
+    } else if ( selectionFlag == 5  || selectionFlag == 6  || selectionFlag == 18  || selectionFlag == 17 ) {
+      N = 6;
+    } else if ( selectionFlag == 7  || selectionFlag == 8  || selectionFlag == 16  || selectionFlag == 15 ) {
+      N = 12;
+    } else if ( selectionFlag == 9  || selectionFlag == 10  || selectionFlag == 11  ||
+                selectionFlag == 12 || selectionFlag == 13  || selectionFlag == 14 ) {
+      N = 24;
+    }
+  latex->DrawLatex(0.55,0.72,Form("#color[4]{%.3f < #phi < %.3f}",       ((Double_t) selectionFlag2)*2.*TMath::Pi()/((Double_t) N) ,     (((Double_t) selectionFlag2) + 1.)*2.*TMath::Pi()/((Double_t) N)    ));
+
 
   /* - This is the part where we obtain the actual number of J/Psi, PsiPrime
      - and the background. This is still Kay's original code. I will modify it.
@@ -526,6 +578,49 @@ void fitJPsiTemplate( const int selectionFlag, const int selectionFlag2, Int_t S
 
   numberOfTotalBkg    = (GammaGammaFit-> Integral(2.2,6))/0.05;
   numberOfTotalBkgErr = numberOfTotalBkg*fFitInvMass->GetParError(17)/fFitInvMass->GetParameter(17);
+  // if((selectionFlag == 4 || selectionFlag == 18 || selectionFlag == 19) && selectionFlag2 == 0) {
+  if((selectionFlag == 4 || selectionFlag == 19) && selectionFlag2 == 0) {
+    numberOfTotalJPsi     = (JPsiPeakFit    -> Integral(2.2,6))/0.1;  // USUAL FIT
+    numberOfTotalPsi2s    = (PsiPrimePeakFit-> Integral(2.2,6))/0.1;  // USUAL FIT
+    numberOfTotalJPsiErr  = numberOfTotalJPsi *fFitInvMass->GetParError(15)/fFitInvMass->GetParameter(15);
+    numberOfTotalPsi2sErr = numberOfTotalPsi2s*fFitInvMass->GetParError(16)/fFitInvMass->GetParameter(16);
+    numberOfTotalBkg      = (GammaGammaFit-> Integral(2.2,6))/0.1;
+    numberOfTotalBkgErr   = numberOfTotalBkg*fFitInvMass->GetParError(17)/fFitInvMass->GetParameter(17);
+  }
+  // if((selectionFlag == 7) && selectionFlag2 == 4) {
+  //   numberOfTotalJPsi     = (JPsiPeakFit    -> Integral(2.2,6))/0.1;  // USUAL FIT
+  //   numberOfTotalPsi2s    = (PsiPrimePeakFit-> Integral(2.2,6))/0.1;  // USUAL FIT
+  //   numberOfTotalJPsiErr  = numberOfTotalJPsi *fFitInvMass->GetParError(15)/fFitInvMass->GetParameter(15);
+  //   numberOfTotalPsi2sErr = numberOfTotalPsi2s*fFitInvMass->GetParError(16)/fFitInvMass->GetParameter(16);
+  //   numberOfTotalBkg      = (GammaGammaFit-> Integral(2.2,6))/0.1;
+  //   numberOfTotalBkgErr   = numberOfTotalBkg*fFitInvMass->GetParError(17)/fFitInvMass->GetParameter(17);
+  // }
+  // if((selectionFlag == 8) && selectionFlag2 == 2) {
+  //   numberOfTotalJPsi     = (JPsiPeakFit    -> Integral(2.2,6))/0.1;  // USUAL FIT
+  //   numberOfTotalPsi2s    = (PsiPrimePeakFit-> Integral(2.2,6))/0.1;  // USUAL FIT
+  //   numberOfTotalJPsiErr  = numberOfTotalJPsi *fFitInvMass->GetParError(15)/fFitInvMass->GetParameter(15);
+  //   numberOfTotalPsi2sErr = numberOfTotalPsi2s*fFitInvMass->GetParError(16)/fFitInvMass->GetParameter(16);
+  //   numberOfTotalBkg      = (GammaGammaFit-> Integral(2.2,6))/0.1;
+  //   numberOfTotalBkgErr   = numberOfTotalBkg*fFitInvMass->GetParError(17)/fFitInvMass->GetParameter(17);
+  // }
+  // if((selectionFlag == 9) && selectionFlag2 == 1) {
+  //   numberOfTotalJPsi     = (JPsiPeakFit    -> Integral(2.2,6))/0.1;  // USUAL FIT
+  //   numberOfTotalPsi2s    = (PsiPrimePeakFit-> Integral(2.2,6))/0.1;  // USUAL FIT
+  //   numberOfTotalJPsiErr  = numberOfTotalJPsi *fFitInvMass->GetParError(15)/fFitInvMass->GetParameter(15);
+  //   numberOfTotalPsi2sErr = numberOfTotalPsi2s*fFitInvMass->GetParError(16)/fFitInvMass->GetParameter(16);
+  //   numberOfTotalBkg      = (GammaGammaFit-> Integral(2.2,6))/0.1;
+  //   numberOfTotalBkgErr   = numberOfTotalBkg*fFitInvMass->GetParError(17)/fFitInvMass->GetParameter(17);
+  // }
+  // if((selectionFlag == 11) && selectionFlag2 == 22) {
+  //   numberOfTotalJPsi     = (JPsiPeakFit    -> Integral(2.2,6))/0.1;  // USUAL FIT
+  //   numberOfTotalPsi2s    = (PsiPrimePeakFit-> Integral(2.2,6))/0.1;  // USUAL FIT
+  //   numberOfTotalJPsiErr  = numberOfTotalJPsi *fFitInvMass->GetParError(15)/fFitInvMass->GetParameter(15);
+  //   numberOfTotalPsi2sErr = numberOfTotalPsi2s*fFitInvMass->GetParError(16)/fFitInvMass->GetParameter(16);
+  //   numberOfTotalBkg      = (GammaGammaFit-> Integral(2.2,6))/0.1;
+  //   numberOfTotalBkgErr   = numberOfTotalBkg*fFitInvMass->GetParError(17)/fFitInvMass->GetParameter(17);
+  // }
+
+
   latex->DrawLatex(0.55,0.66,Form("N_{J/#psi} = %.0f #pm %.0f",        numberOfTotalJPsi,  numberOfTotalJPsiErr ));//fFitInvMass->GetParameter(0) *fFitInvMass->GetParError(15)/0.05 ) );
   latex->DrawLatex(0.55,0.60,Form("N_{#psi(2S)} = %.0f #pm %.0f",      numberOfTotalPsi2s, numberOfTotalPsi2sErr));//fFitInvMass->GetParameter(5) *fFitInvMass->GetParError(16)/0.05 ) );
   latex->DrawLatex(0.55,0.54,Form("N_{#gamma#gamma} = %.0f #pm %.0f",  numberOfTotalBkg,   numberOfTotalBkgErr  ));//fFitInvMass->GetParameter(10)*fFitInvMass->GetParError(17)/0.05 ) );
@@ -580,8 +675,11 @@ void fitJPsiTemplate( const int selectionFlag, const int selectionFlag2, Int_t S
  * - 0: standard
  * - 1: ehm
  */
-void CreateCosThetaTh2(const char* AnalysisName, Int_t SignalRangeMode = 0){
-  fileMC[0] = new TFile("MCtrainResults/2019-09-17/kCohJpsiToMu/AnalysisResults.root");
+// void CreateCosThetaTh2(const char* AnalysisName, Int_t SignalRangeMode = 0){
+void CreateCosThetaTh2(){
+
+  parsedMC = new TFile("SignalExtraction/CohHe.root");
+  // fileMC[0] = new TFile("MCtrainResults/2019-09-17/kCohJpsiToMu/AnalysisResults.root");
   fileMC[1] = new TFile("MCtrainResults/2019-09-17/kCohPsi2sToMu/AnalysisResults.root");
   fileMC[2] = new TFile("MCtrainResults/2019-09-17/kCohPsi2sToMuPi/AnalysisResults.root");
   fileMC[3] = new TFile("MCtrainResults/2019-09-17/kIncohJpsiToMu/AnalysisResults.root");
@@ -592,7 +690,7 @@ void CreateCosThetaTh2(const char* AnalysisName, Int_t SignalRangeMode = 0){
   // TDirectory* dirMC[8];
   cout << "CHECKPOINT 4 " << endl << flush;
 
-  for(Int_t iDirectory = 0; iDirectory < 8; iDirectory++) {
+  for(Int_t iDirectory = 1; iDirectory < 8; iDirectory++) {
     dirMC[iDirectory] = fileMC[iDirectory]->GetDirectory("MyTask");
   }
   /* - At this level you could check if everything was okay.
@@ -602,167 +700,78 @@ void CreateCosThetaTh2(const char* AnalysisName, Int_t SignalRangeMode = 0){
    *   KEY: TList	MyOutputContainer;1	Doubly linked list
    */
   // TList* listingsMC[8];
-  for(Int_t iDirectory = 0; iDirectory < 8; iDirectory++) {
+  for(Int_t iDirectory = 1; iDirectory < 8; iDirectory++) {
     dirMC[iDirectory]->GetObject("MyOutputContainer", listingsMC[iDirectory]);
   }
 
+  fileList = new TFile("SignalExtraction/CohHe_data.root");
 
-  // fitJPsiTemplateMC();
-  fileList = new TFile(AnalysisName);
-  dir      = fileList->GetDirectory("MyTask");
-  dir->GetObject("MyOutputContainer", listings);
+  TH1F* RawYields[24];
+  for (Int_t i = 0; i < 24; i++) {
+    RawYields[i] = new TH1F(Form("h_%d", i), Form("h_%d", i), 100, -0.5, 99.5);
+  }
+  Int_t Counter[24] = {1,1,1,1,1, 6,6, 12,12, 24,24,24,24,24,24, 12,12, 6,6, 1,1,1,1,1 };
 
+  Double_t CosThetaCenters[24];
+  // Double_t PhiCenters[24][24];
+  Double_t PhiCenters[24];
 
-
-  Double_t CosThetaCenters[] = { -0.5, -0.25, -0.1, 0, 0.1, 0.25, 0.5 };
-  Double_t PhiCenters[] = { -3.14*19.5*0.05, -3.14*18.5*0.05, -3.14*17.5*0.05, -3.14*15*0.05,
-                            -3.14*11*0.05,   -3.14*7.5*0.05,  -3.14*5*0.05,    -3.14*3*0.05,
-                            -3.14*1.5*0.05,  -3.14*0.5*0.05,  +3.14*0.5*0.05,  +3.14*1.5*0.05,
-                            +3.14*3*0.05,    +3.14*5*0.05,    +3.14*7.5*0.05,  +3.14*11*0.05,
-                            +3.14*15*0.05,   +3.14*17.5*0.05, +3.14*18.5*0.05, +3.14*19.5*0.05 };
-
-
-  Double_t MyVariableCosThetaBinning[] = { -0.65, -0.35, -0.15, -0.05,
-                                            0.05,  0.15,  0.35,  0.65 };
-  Double_t MyVariablePhiBinning[] = { -3.14*1,       -3.14*19*0.05, -3.14*18*0.05, -3.14*17*0.05,
-                                      -3.14*13*0.05, -3.14*9*0.05,  -3.14*6*0.05,  -3.14*4*0.05,
-                                      -3.14*2*0.05,  -3.14*1*0.05,   0,            +3.14*1*0.05,
-                                      +3.14*2*0.05,  +3.14*4*0.05,  +3.14*6*0.05,  +3.14*9*0.05,
-                                      +3.14*13*0.05, +3.14*17*0.05, +3.14*18*0.05, +3.14*19*0.05,
-                                      +3.14*1 };
-
-  TH2F* helicity2DafterSignalExtraction =
-            new TH2F( "helicity2DafterSignalExtraction",
-                      "helicity2DafterSignalExtraction",
-                      7, MyVariableCosThetaBinning, 20, MyVariablePhiBinning
-                      // 10, -1, 1, 10, -4, 4
-                      );
-  TH2F* helicityOfGammaGamma =
-            new TH2F( "helicityOfGammaGamma",
-                      "helicityOfGammaGamma",
-                      7, MyVariableCosThetaBinning, 20, MyVariablePhiBinning
-                      // 10, -1, 1, 10, -4, 4
-                      );
-
-  TH2F* helicity2DafterSignalExtractionErrors =
-            new TH2F( "helicity2DafterSignalExtractionErrors",
-                      "helicity2DafterSignalExtractionErrors",
-                      7, MyVariableCosThetaBinning, 20, MyVariablePhiBinning
-                      // 10, -1, 1, 10, -4, 4
-                      );
-  TH2F* helicityOfGammaGammaErrors =
-            new TH2F( "helicityOfGammaGammaErrors",
-                      "helicityOfGammaGammaErrors",
-                      7, MyVariableCosThetaBinning, 20, MyVariablePhiBinning
-                      // 10, -1, 1, 10, -4, 4
-                      );
+  // PhiCenters[0] = PhiCenters[1] = PhiCenters[2]  = PhiCenters[3]  = PhiCenters[4] = PhiCenters[23] = PhiCenters[22] = PhiCenters[21] = PhiCenters[20] = PhiCenters[19] = {TMath::Pi(),  0,0,0,0,0,0,  0,0,0,0,0,0,  0,0,0,0,0,0,  0,0,0,0,0};
+  // Double_t Spacing1 = TMath::Pi()/12.;
+  // PhiCenters[5] = PhiCenters[6] = PhiCenters[18] = PhiCenters[17] = {Spacing1, 3.*Spacing1, 5.*Spacing1, 7.*Spacing1, 9.*Spacing1, 11.*Spacing1 };
+  // Double_t Spacing2 = TMath::Pi()/24.;
+  // for (size_t i = 0; i < 12; i++) {
+  //   PhiCenters[7][i] = PhiCenters[8][i] = PhiCenters[16][i] = PhiCenters[15][i] = (2.*((Double_t) i) + 1.) *Spacing2;
+  // }
+  // Double_t Spacing3 = TMath::Pi()/48.;
+  // for (size_t i = 0; i < 24; i++) {
+  //   PhiCenters[9][i] = PhiCenters[10][i] = PhiCenters[11][i] = PhiCenters[12][i] = PhiCenters[13][i] = PhiCenters[14][i] = (2.*((Double_t) i) + 1.) *Spacing3;
+  // }
+  PhiCenters[0] = PhiCenters[1] = PhiCenters[2]  = PhiCenters[3]  = PhiCenters[4] = PhiCenters[23] = PhiCenters[22] = PhiCenters[21] = PhiCenters[20] = PhiCenters[19] = TMath::Pi();
+  Double_t Spacing1 = TMath::Pi()/12.;
+  PhiCenters[5] = PhiCenters[6] = PhiCenters[18] = PhiCenters[17] = Spacing1;
+  Double_t Spacing2 = TMath::Pi()/24.;
+  // for (size_t i = 0; i < 12; i++) {
+    PhiCenters[7] = PhiCenters[8] = PhiCenters[16] = PhiCenters[15] = Spacing2;
+  // }
+  Double_t Spacing3 = TMath::Pi()/48.;
+  // for (size_t i = 0; i < 24; i++) {
+    PhiCenters[9] = PhiCenters[10] = PhiCenters[11] = PhiCenters[12] = PhiCenters[13] = PhiCenters[14] = Spacing3;
+  // }
 
 
-  for (size_t iCosThetaBins = 0; iCosThetaBins < 7; iCosThetaBins++) {
-    for (size_t iPhiBins = 0; iPhiBins < 20; iPhiBins++) {
+  for (size_t i = 0; i < 24; i++) {
+    CosThetaCenters[i] = -1. + (2.*(Double_t) i + 1.)*(0.08+0.01/3.)*0.5;
+  }
+
+
+  for (Int_t iCosThetaBins = 4; iCosThetaBins < 20; iCosThetaBins++) {
+  // for (Int_t iCosThetaBins = 11; iCosThetaBins < 12; iCosThetaBins++) {
+
+    for (Int_t iPhiBins = 0; iPhiBins < Counter[iCosThetaBins]; iPhiBins++) {
+    // for (Int_t iPhiBins = 22; iPhiBins < 23; iPhiBins++) {
 
       JPsiPeakValue    = 0;
       JPsiPeakValueErr = 0;
       BkgValue         = 0;
       BkgValueError    = 0;
-      cout << "CHECKPOINT 1 " << endl << flush;
+      // cout << "CHECKPOINT 1 " << endl << flush;
       fitJPsiTemplateMC(iCosThetaBins, iPhiBins);
-      cout << "CHECKPOINT 2 " << endl << flush;
+      // cout << "CHECKPOINT 2 " << endl << flush;
 
-      fitJPsiTemplate(iCosThetaBins, iPhiBins, SignalRangeMode);
-      cout << "CHECKPOINT 3 " << endl << flush;
+      fitJPsiTemplate(iCosThetaBins, iPhiBins, 0);
+      // cout << "CHECKPOINT 3 " << endl << flush;
 
 
-      helicity2DafterSignalExtraction->Fill( CosThetaCenters[iCosThetaBins],
-                                             PhiCenters[iPhiBins],
-                                             JPsiPeakValue/( (MyVariableCosThetaBinning[iCosThetaBins+1]-MyVariableCosThetaBinning[iCosThetaBins]) * (MyVariablePhiBinning[iPhiBins+1]-MyVariablePhiBinning[iPhiBins]) )
-                                             );
-      helicityOfGammaGamma->Fill( CosThetaCenters[iCosThetaBins],
-                                  PhiCenters[iPhiBins],
-                                  BkgValue/( (MyVariableCosThetaBinning[iCosThetaBins+1]-MyVariableCosThetaBinning[iCosThetaBins]) * (MyVariablePhiBinning[iPhiBins+1]-MyVariablePhiBinning[iPhiBins]) )
-                                  );
-
-      helicity2DafterSignalExtractionErrors->Fill( CosThetaCenters[iCosThetaBins],
-                                                   PhiCenters[iPhiBins],
-                                                   JPsiPeakValue/( (MyVariableCosThetaBinning[iCosThetaBins+1]-MyVariableCosThetaBinning[iCosThetaBins]) * (MyVariablePhiBinning[iPhiBins+1]-MyVariablePhiBinning[iPhiBins]) )
-                                                   );
-      helicityOfGammaGammaErrors->Fill( CosThetaCenters[iCosThetaBins],
-                                        PhiCenters[iPhiBins],
-                                        BkgValue/( (MyVariableCosThetaBinning[iCosThetaBins+1]-MyVariableCosThetaBinning[iCosThetaBins]) * (MyVariablePhiBinning[iPhiBins+1]-MyVariablePhiBinning[iPhiBins]) )
-                                        );
-      helicity2DafterSignalExtractionErrors->SetBinError( iCosThetaBins + 1 ,
-                                                          iPhiBins      + 1 ,
-                                                          JPsiPeakValueErr/( (MyVariableCosThetaBinning[iCosThetaBins+1]-MyVariableCosThetaBinning[iCosThetaBins]) * (MyVariablePhiBinning[iPhiBins+1]-MyVariablePhiBinning[iPhiBins]) )
-                                                          );
-      helicityOfGammaGammaErrors->SetBinError( iCosThetaBins + 1 ,
-                                               iPhiBins      + 1 ,
-                                               BkgValueError/( (MyVariableCosThetaBinning[iCosThetaBins+1]-MyVariableCosThetaBinning[iCosThetaBins]) * (MyVariablePhiBinning[iPhiBins+1]-MyVariablePhiBinning[iPhiBins]) )
-                                               );
+      RawYields[iCosThetaBins]->Fill(       iPhiBins,   JPsiPeakValue   /((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
+      RawYields[iCosThetaBins]->SetBinError(iPhiBins+1, JPsiPeakValueErr/((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
 
     }
+    TFile f(Form("SignalExtraction/RawYieldsHe_%d.root", iCosThetaBins),   "recreate");
+    RawYields[iCosThetaBins]->Write();
+    f.Close();
+
   }
 
-  // TFile f("pngResults/Polarisation2DHE.root", "recreate");
-  // helicity2DafterSignalExtraction      ->Write();
-  // helicityOfGammaGamma                 ->Write();
-  // helicity2DafterSignalExtractionErrors->Write();
-  // helicityOfGammaGammaErrors           ->Write();
-  // f.Close();
-  if      ( SignalRangeMode == 0 ) {
-    TFile f("pngResults/Polarisation2DHE.root",   "recreate");
-    helicity2DafterSignalExtraction      ->Write();
-    helicityOfGammaGamma                 ->Write();
-    helicity2DafterSignalExtractionErrors->Write();
-    helicityOfGammaGammaErrors           ->Write();
-    f.Close();
-  }
-  else if ( SignalRangeMode == 1 ) {
-    TFile f("pngResults/Polarisation2DHE_1.root", "recreate");
-    helicity2DafterSignalExtraction      ->Write();
-    helicityOfGammaGamma                 ->Write();
-    helicity2DafterSignalExtractionErrors->Write();
-    helicityOfGammaGammaErrors           ->Write();
-    f.Close();
-  }
-  else if ( SignalRangeMode == 2 ) {
-    TFile f("pngResults/Polarisation2DHE_2.root", "recreate");
-    helicity2DafterSignalExtraction      ->Write();
-    helicityOfGammaGamma                 ->Write();
-    helicity2DafterSignalExtractionErrors->Write();
-    helicityOfGammaGammaErrors           ->Write();
-    f.Close();
-  }
-  else if ( SignalRangeMode == 3 ) {
-    TFile f("pngResults/Polarisation2DHE_3.root", "recreate");
-    helicity2DafterSignalExtraction      ->Write();
-    helicityOfGammaGamma                 ->Write();
-    helicity2DafterSignalExtractionErrors->Write();
-    helicityOfGammaGammaErrors           ->Write();
-    f.Close();
-  }
-  else if ( SignalRangeMode == 4 ) {
-    TFile f("pngResults/Polarisation2DHE_4.root", "recreate");
-    helicity2DafterSignalExtraction      ->Write();
-    helicityOfGammaGamma                 ->Write();
-    helicity2DafterSignalExtractionErrors->Write();
-    helicityOfGammaGammaErrors           ->Write();
-    f.Close();
-  }
-  else if ( SignalRangeMode == 5 ) {
-    TFile f("pngResults/Polarisation2DHE_5.root", "recreate");
-    helicity2DafterSignalExtraction      ->Write();
-    helicityOfGammaGamma                 ->Write();
-    helicity2DafterSignalExtractionErrors->Write();
-    helicityOfGammaGammaErrors           ->Write();
-    f.Close();
-  }
-  else                             {
-    TFile f("pngResults/Polarisation2DHE.root",   "recreate");
-    helicity2DafterSignalExtraction      ->Write();
-    helicityOfGammaGamma                 ->Write();
-    helicity2DafterSignalExtractionErrors->Write();
-    helicityOfGammaGammaErrors           ->Write();
-    f.Close();
-  }
 
 }

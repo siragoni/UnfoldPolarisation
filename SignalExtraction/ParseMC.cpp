@@ -87,8 +87,10 @@ void ParseMC(){
   TH1F* InvMassH_binzero[1];  // -1 + 1*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_binzero[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binzero_%d", iCosThetaBins),
-                Form("InvMassH_binzero_%d", iCosThetaBins),
+                // Form("InvMassH_binzero_%d", iCosThetaBins),
+                // Form("InvMassH_binzero_%d", iCosThetaBins),
+                Form("InvMassH_0_%d", iCosThetaBins),
+                Form("InvMassH_0_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -96,8 +98,10 @@ void ParseMC(){
   TH1F* InvMassH_binone[1];  // -1 + 2*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_binone[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binone_%d", iCosThetaBins),
-                Form("InvMassH_binone_%d", iCosThetaBins),
+                // Form("InvMassH_binone_%d", iCosThetaBins),
+                // Form("InvMassH_binone_%d", iCosThetaBins),
+                Form("InvMassH_1_%d", iCosThetaBins),
+                Form("InvMassH_1_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -105,8 +109,10 @@ void ParseMC(){
   TH1F* InvMassH_bintwo[1];  // -1 + 3*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_bintwo[iCosThetaBins] = new TH1F(
-                Form("InvMassH_bintwo_%d", iCosThetaBins),
-                Form("InvMassH_bintwo_%d", iCosThetaBins),
+                // Form("InvMassH_bintwo_%d", iCosThetaBins),
+                // Form("InvMassH_bintwo_%d", iCosThetaBins),
+                Form("InvMassH_2_%d", iCosThetaBins),
+                Form("InvMassH_2_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -114,8 +120,10 @@ void ParseMC(){
   TH1F* InvMassH_binthree[1];  // -1 + 4*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_binthree[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binthree_%d", iCosThetaBins),
-                Form("InvMassH_binthree_%d", iCosThetaBins),
+                // Form("InvMassH_3_%d", iCosThetaBins),
+                // Form("InvMassH_3_%d", iCosThetaBins),
+                Form("InvMassH_3_%d", iCosThetaBins),
+                Form("InvMassH_3_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -123,8 +131,10 @@ void ParseMC(){
   TH1F* InvMassH_binfour[1];  // -1 + 5*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_binfour[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binfour_%d", iCosThetaBins),
-                Form("InvMassH_binfour_%d", iCosThetaBins),
+                // Form("InvMassH_4_%d", iCosThetaBins),
+                // Form("InvMassH_4_%d", iCosThetaBins),
+                Form("InvMassH_4_%d", iCosThetaBins),
+                Form("InvMassH_4_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -132,8 +142,10 @@ void ParseMC(){
   TH1F* InvMassH_binfive[6];  // -1 + 6*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 6; iCosThetaBins++ ){
     InvMassH_binfive[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binfive_%d", iCosThetaBins),
-                Form("InvMassH_binfive_%d", iCosThetaBins),
+                // Form("InvMassH_binfive_%d", iCosThetaBins),
+                // Form("InvMassH_binfive_%d", iCosThetaBins),
+                Form("InvMassH_5_%d", iCosThetaBins),
+                Form("InvMassH_5_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -141,8 +153,10 @@ void ParseMC(){
   TH1F* InvMassH_binsix[6];  // -1 + 7*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 6; iCosThetaBins++ ){
     InvMassH_binsix[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binsix_%d", iCosThetaBins),
-                Form("InvMassH_binsix_%d", iCosThetaBins),
+                // Form("InvMassH_binsix_%d", iCosThetaBins),
+                // Form("InvMassH_binsix_%d", iCosThetaBins),
+                Form("InvMassH_6_%d", iCosThetaBins),
+                Form("InvMassH_6_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -150,8 +164,10 @@ void ParseMC(){
   TH1F* InvMassH_binseven[12];  // -1 + 8*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 12; iCosThetaBins++ ){
     InvMassH_binseven[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binseven_%d", iCosThetaBins),
-                Form("InvMassH_binseven_%d", iCosThetaBins),
+                // Form("InvMassH_binseven_%d", iCosThetaBins),
+                // Form("InvMassH_binseven_%d", iCosThetaBins),
+                Form("InvMassH_7_%d", iCosThetaBins),
+                Form("InvMassH_7_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -159,8 +175,10 @@ void ParseMC(){
   TH1F* InvMassH_bineight[12];  // -1 + 9*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 12; iCosThetaBins++ ){
     InvMassH_bineight[iCosThetaBins] = new TH1F(
-                Form("InvMassH_bineight_%d", iCosThetaBins),
-                Form("InvMassH_bineight_%d", iCosThetaBins),
+                // Form("InvMassH_bineight_%d", iCosThetaBins),
+                // Form("InvMassH_bineight_%d", iCosThetaBins),
+                Form("InvMassH_8_%d", iCosThetaBins),
+                Form("InvMassH_8_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -168,8 +186,10 @@ void ParseMC(){
   TH1F* InvMassH_binnine[24];  // -1 + 10*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 24; iCosThetaBins++ ){
     InvMassH_binnine[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binnine_%d", iCosThetaBins),
-                Form("InvMassH_binnine_%d", iCosThetaBins),
+                // Form("InvMassH_binnine_%d", iCosThetaBins),
+                // Form("InvMassH_binnine_%d", iCosThetaBins),
+                Form("InvMassH_9_%d", iCosThetaBins),
+                Form("InvMassH_9_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -177,8 +197,10 @@ void ParseMC(){
   TH1F* InvMassH_binten[24];  // -1 + 11*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 24; iCosThetaBins++ ){
     InvMassH_binten[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binten_%d", iCosThetaBins),
-                Form("InvMassH_binten_%d", iCosThetaBins),
+                // Form("InvMassH_binten_%d", iCosThetaBins),
+                // Form("InvMassH_binten_%d", iCosThetaBins),
+                Form("InvMassH_10_%d", iCosThetaBins),
+                Form("InvMassH_10_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -186,8 +208,10 @@ void ParseMC(){
   TH1F* InvMassH_bineleven[24];  // -1 + 12*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 24; iCosThetaBins++ ){
     InvMassH_bineleven[iCosThetaBins] = new TH1F(
-                Form("InvMassH_bineleven_%d", iCosThetaBins),
-                Form("InvMassH_bineleven_%d", iCosThetaBins),
+                // Form("InvMassH_bineleven_%d", iCosThetaBins),
+                // Form("InvMassH_bineleven_%d", iCosThetaBins),
+                Form("InvMassH_11_%d", iCosThetaBins),
+                Form("InvMassH_11_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -195,8 +219,10 @@ void ParseMC(){
   TH1F* InvMassH_bintwelve[24];  // -1 + 13*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 24; iCosThetaBins++ ){
     InvMassH_bintwelve[iCosThetaBins] = new TH1F(
-                Form("InvMassH_bintwelve_%d", iCosThetaBins),
-                Form("InvMassH_bintwelve_%d", iCosThetaBins),
+                // Form("InvMassH_bintwelve_%d", iCosThetaBins),
+                // Form("InvMassH_bintwelve_%d", iCosThetaBins),
+                Form("InvMassH_12_%d", iCosThetaBins),
+                Form("InvMassH_12_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -204,8 +230,10 @@ void ParseMC(){
   TH1F* InvMassH_binthirteen[24];  // -1 + 14*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 24; iCosThetaBins++ ){
     InvMassH_binthirteen[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binthirteen_%d", iCosThetaBins),
-                Form("InvMassH_binthirteen_%d", iCosThetaBins),
+                // Form("InvMassH_binthirteen_%d", iCosThetaBins),
+                // Form("InvMassH_binthirteen_%d", iCosThetaBins),
+                Form("InvMassH_13_%d", iCosThetaBins),
+                Form("InvMassH_13_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -213,8 +241,10 @@ void ParseMC(){
   TH1F* InvMassH_binfourteen[24];  // -1 + 15*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 24; iCosThetaBins++ ){
     InvMassH_binfourteen[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binfourteen_%d", iCosThetaBins),
-                Form("InvMassH_binfourteen_%d", iCosThetaBins),
+                // Form("InvMassH_binfourteen_%d", iCosThetaBins),
+                // Form("InvMassH_binfourteen_%d", iCosThetaBins),
+                Form("InvMassH_14_%d", iCosThetaBins),
+                Form("InvMassH_14_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -222,8 +252,10 @@ void ParseMC(){
   TH1F* InvMassH_binfifteen[12];  // -1 + 16*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 12; iCosThetaBins++ ){
     InvMassH_binfifteen[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binfifteen_%d", iCosThetaBins),
-                Form("InvMassH_binfifteen_%d", iCosThetaBins),
+                // Form("InvMassH_binfifteen_%d", iCosThetaBins),
+                // Form("InvMassH_binfifteen_%d", iCosThetaBins),
+                Form("InvMassH_15_%d", iCosThetaBins),
+                Form("InvMassH_15_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -231,8 +263,10 @@ void ParseMC(){
   TH1F* InvMassH_binsixteen[12];  // -1 + 17*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 12; iCosThetaBins++ ){
     InvMassH_binsixteen[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binsixteen_%d", iCosThetaBins),
-                Form("InvMassH_binsixteen_%d", iCosThetaBins),
+                // Form("InvMassH_binsixteen_%d", iCosThetaBins),
+                // Form("InvMassH_binsixteen_%d", iCosThetaBins),
+                Form("InvMassH_16_%d", iCosThetaBins),
+                Form("InvMassH_16_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -240,8 +274,10 @@ void ParseMC(){
   TH1F* InvMassH_binseventeen[6];  // -1 + 18*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 6; iCosThetaBins++ ){
     InvMassH_binseventeen[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binseventeen_%d", iCosThetaBins),
-                Form("InvMassH_binseventeen_%d", iCosThetaBins),
+                // Form("InvMassH_binseventeen_%d", iCosThetaBins),
+                // Form("InvMassH_binseventeen_%d", iCosThetaBins),
+                Form("InvMassH_17_%d", iCosThetaBins),
+                Form("InvMassH_17_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -249,8 +285,10 @@ void ParseMC(){
   TH1F* InvMassH_bineighteen[6];  // -1 + 19*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 6; iCosThetaBins++ ){
     InvMassH_bineighteen[iCosThetaBins] = new TH1F(
-                Form("InvMassH_bineighteen_%d", iCosThetaBins),
-                Form("InvMassH_bineighteen_%d", iCosThetaBins),
+                // Form("InvMassH_bineighteen_%d", iCosThetaBins),
+                // Form("InvMassH_bineighteen_%d", iCosThetaBins),
+                Form("InvMassH_18_%d", iCosThetaBins),
+                Form("InvMassH_18_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -258,8 +296,10 @@ void ParseMC(){
   TH1F* InvMassH_binnineteen[1];  // -1 + 20*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_binnineteen[iCosThetaBins] = new TH1F(
-                Form("InvMassH_binnineteen_%d", iCosThetaBins),
-                Form("InvMassH_binnineteen_%d", iCosThetaBins),
+                // Form("InvMassH_binnineteen_%d", iCosThetaBins),
+                // Form("InvMassH_binnineteen_%d", iCosThetaBins),
+                Form("InvMassH_19_%d", iCosThetaBins),
+                Form("InvMassH_19_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -267,8 +307,10 @@ void ParseMC(){
   TH1F* InvMassH_bintwenty[1];  // -1 + 21*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_bintwenty[iCosThetaBins] = new TH1F(
-                Form("InvMassH_bintwenty_%d", iCosThetaBins),
-                Form("InvMassH_bintwenty_%d", iCosThetaBins),
+                // Form("InvMassH_bintwenty_%d", iCosThetaBins),
+                // Form("InvMassH_bintwenty_%d", iCosThetaBins),
+                Form("InvMassH_20_%d", iCosThetaBins),
+                Form("InvMassH_20_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -276,8 +318,10 @@ void ParseMC(){
   TH1F* InvMassH_bintwentyone[1];  // -1 + 22*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_bintwentyone[iCosThetaBins] = new TH1F(
-                Form("InvMassH_bintwentyone_%d", iCosThetaBins),
-                Form("InvMassH_bintwentyone_%d", iCosThetaBins),
+                // Form("InvMassH_bintwentyone_%d", iCosThetaBins),
+                // Form("InvMassH_bintwentyone_%d", iCosThetaBins),
+                Form("InvMassH_21_%d", iCosThetaBins),
+                Form("InvMassH_21_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -285,8 +329,10 @@ void ParseMC(){
   TH1F* InvMassH_bintwentytwo[1];  // -1 + 23*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_bintwentytwo[iCosThetaBins] = new TH1F(
-                Form("InvMassH_bintwentytwo_%d", iCosThetaBins),
-                Form("InvMassH_bintwentytwo_%d", iCosThetaBins),
+                // Form("InvMassH_bintwentytwo_%d", iCosThetaBins),
+                // Form("InvMassH_bintwentytwo_%d", iCosThetaBins),
+                Form("InvMassH_22_%d", iCosThetaBins),
+                Form("InvMassH_22_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -294,8 +340,10 @@ void ParseMC(){
   TH1F* InvMassH_bintwentythree[1];  // -1 + 24*(0.08+0.01/3.)
   for(Int_t iCosThetaBins = 0; iCosThetaBins < 1; iCosThetaBins++ ){
     InvMassH_bintwentythree[iCosThetaBins] = new TH1F(
-                Form("InvMassH_bintwentythree_%d", iCosThetaBins),
-                Form("InvMassH_bintwentythree_%d", iCosThetaBins),
+                // Form("InvMassH_bintwentythree_%d", iCosThetaBins),
+                // Form("InvMassH_bintwentythree_%d", iCosThetaBins),
+                Form("InvMassH_23_%d", iCosThetaBins),
+                Form("InvMassH_23_%d", iCosThetaBins),
                 2000, 0, 20
                 );
   }
@@ -597,5 +645,71 @@ void ParseMC(){
 
 
   SavingFile       ->Close();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Int_t Counter[24] = {1,1,1,1,1, 6,6, 12,12, 24,24,24,24,24,24, 12,12, 6,6, 1,1,1,1,1 };
+
+  Double_t CosThetaCenters[24];
+  Double_t PhiCenters[24];
+
+  PhiCenters[0] = PhiCenters[1] = PhiCenters[2]  = PhiCenters[3]  = PhiCenters[4] = PhiCenters[23] = PhiCenters[22] = PhiCenters[21] = PhiCenters[20] = PhiCenters[19] = TMath::Pi();
+  Double_t Spacing1 = TMath::Pi()/12.;
+  PhiCenters[5] = PhiCenters[6] = PhiCenters[18] = PhiCenters[17] = Spacing1;
+  Double_t Spacing2 = TMath::Pi()/24.;
+  PhiCenters[7] = PhiCenters[8] = PhiCenters[16] = PhiCenters[15] = Spacing2;
+  Double_t Spacing3 = TMath::Pi()/48.;
+  PhiCenters[9] = PhiCenters[10] = PhiCenters[11] = PhiCenters[12] = PhiCenters[13] = PhiCenters[14] = Spacing3;
+
+
+  for (size_t i = 0; i < 24; i++) {
+    CosThetaCenters[i] = -1. + (2.*(Double_t) i + 1.)*(0.08+0.01/3.)*0.5;
+  }
+
+  TH1F* RawYields[24];
+  for (Int_t i = 0; i < 24; i++) {
+    RawYields[i] = new TH1F(Form("h_%d", i), Form("h_%d", i), 100, -0.5, 99.5);
+  }
+  TFile* parsedMC = new TFile("SignalExtraction/CohHe.root");
+
+  Double_t JPsiPeakValue    = 0;
+  Double_t JPsiPeakValueErr = 0;
+  Double_t BkgValue         = 0;
+  Double_t BkgValueError    = 0;
+  TH1F* fCohJpsiToMu        = 0x0;
+  for (Int_t iCosThetaBins = 4; iCosThetaBins < 20; iCosThetaBins++) {
+
+    for (Int_t iPhiBins = 0; iPhiBins < Counter[iCosThetaBins]; iPhiBins++) {
+
+      JPsiPeakValue    = 0;
+      JPsiPeakValueErr = 0;
+      BkgValue         = 0;
+      BkgValueError    = 0;
+
+      fCohJpsiToMu     = (TH1F*)parsedMC->Get( Form( "InvMassH_%d_%d", iCosThetaBins, iPhiBins ) );
+      JPsiPeakValue    = (Double_t) fCohJpsiToMu->GetEntries();
+      JPsiPeakValueErr = TMath::Sqrt((Double_t) fCohJpsiToMu->GetEntries());
+
+      RawYields[iCosThetaBins]->Fill(       iPhiBins,   JPsiPeakValue   /((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
+      RawYields[iCosThetaBins]->SetBinError(iPhiBins+1, JPsiPeakValueErr/((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
+
+    }
+    TFile f(Form("SignalExtraction/MonteCarloYieldsHe_%d.root", iCosThetaBins),   "recreate");
+    RawYields[iCosThetaBins]->Write();
+    f.Close();
+
+  }
+
 
 }
