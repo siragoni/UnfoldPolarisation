@@ -350,7 +350,21 @@ void ParseMC(){
 
 
 
-  Double_t controlFlag = 0;
+  TH1F* InvMassH_closure[24];  // -1 + 24*(0.08+0.01/3.)
+  for(Int_t iCosThetaBins = 0; iCosThetaBins < 24; iCosThetaBins++ ){
+    InvMassH_closure[iCosThetaBins] = new TH1F(
+                // Form("InvMassH_closure%d", iCosThetaBins),
+                // Form("InvMassH_closure%d", iCosThetaBins),
+                Form("InvMassH_closure_%d", iCosThetaBins),
+                Form("InvMassH_closure_%d", iCosThetaBins),
+                2000, 0, 20
+                );
+  }
+
+
+
+  Double_t controlFlag  = 0;
+  Double_t controlFlag2 = 0;
 
   //read all entries and fill the histograms
   for (Int_t i=0; i<nentriesRec; i++) {
@@ -371,10 +385,22 @@ void ParseMC(){
                   if(PhiHErec < 0.) PhiHErec = PhiHErec + 2.*TMath::Pi();
 
 
+                  controlFlag2 = 0;
+                  if (        CosThetaHEgen2 > -1. && CosThetaHEgen2 < 1. ){
+                    for(Int_t i = 0; i < 24; i++) {
+                      if( controlFlag2 == 1) break;
+                      if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/24. ) {
+                        InvMassH_closure[i]->Fill(Mrec);
+                        controlFlag2 = 1;
+                      }
+                    }
+                  }
+
 
 
                   controlFlag = 0;
-                  if (        CosThetaHErec < (-1. + 1.*(0.08+0.01/3.)) ){
+                  // if (        CosThetaHErec < (-1. + 1.*(0.08+0.01/3.)) ){
+                  if (        CosThetaHEgen2 < (-1. + 1.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -382,7 +408,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 2.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 2.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 2.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -390,7 +417,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 3.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 3.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 3.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -398,7 +426,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 4.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 4.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 4.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -406,7 +435,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 5.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 5.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 5.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -414,7 +444,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 6.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 6.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 6.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 6; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/6. ) {
@@ -422,7 +453,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 7.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 7.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 7.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 6; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/6. ) {
@@ -430,7 +462,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 8.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 8.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 8.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 12; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/12. ) {
@@ -438,7 +471,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 9.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 9.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 9.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 12; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/12. ) {
@@ -446,7 +480,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 10.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 10.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 10.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 24; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/24. ) {
@@ -454,7 +489,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 11.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 11.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 11.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 24; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/24. ) {
@@ -462,7 +498,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 12.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 12.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 12.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 24; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/24. ) {
@@ -470,7 +507,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 13.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 13.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 13.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 24; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/24. ) {
@@ -478,7 +516,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 14.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 14.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 14.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 24; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/24. ) {
@@ -486,7 +525,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 15.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 15.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 15.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 24; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/24. ) {
@@ -494,7 +534,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 16.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 16.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 16.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 12; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/12. ) {
@@ -502,7 +543,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 17.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 17.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 17.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 12; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/12. ) {
@@ -510,7 +552,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 18.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 18.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 18.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 6; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/6. ) {
@@ -518,7 +561,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 19.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 19.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 19.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 6; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/6. ) {
@@ -526,7 +570,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 20.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 20.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 20.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -534,7 +579,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 21.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 21.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 21.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -542,7 +588,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 22.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 22.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 22.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -550,7 +597,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 23.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 23.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 23.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -558,7 +606,8 @@ void ParseMC(){
                         controlFlag = 1;
                       }
                     }
-                  } else if ( CosThetaHErec < (-1. + 24.*(0.08+0.01/3.)) ){
+                  // } else if ( CosThetaHErec < (-1. + 24.*(0.08+0.01/3.)) ){
+                  } else if ( CosThetaHEgen2 < (-1. + 24.*(0.08+0.01/3.)) ){
                     for(Int_t i = 0; i < 1; i++) {
                       if( controlFlag == 1) break;
                       if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/1. ) {
@@ -642,7 +691,9 @@ void ParseMC(){
   for(Int_t i = 0; i < 6; i++ ){
     InvMassH_bineighteen[i]->Write();
   }
-
+  for(Int_t i = 0; i < 24; i++ ){
+    InvMassH_closure[i]->Write();
+  }
 
   SavingFile       ->Close();
 
@@ -701,8 +752,10 @@ void ParseMC(){
       JPsiPeakValue    = (Double_t) fCohJpsiToMu->GetEntries();
       JPsiPeakValueErr = TMath::Sqrt((Double_t) fCohJpsiToMu->GetEntries());
 
-      RawYields[iCosThetaBins]->Fill(       iPhiBins,   JPsiPeakValue   /((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
-      RawYields[iCosThetaBins]->SetBinError(iPhiBins+1, JPsiPeakValueErr/((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
+      // RawYields[iCosThetaBins]->Fill(       iPhiBins,   JPsiPeakValue   /((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
+      // RawYields[iCosThetaBins]->SetBinError(iPhiBins+1, JPsiPeakValueErr/((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
+      RawYields[iCosThetaBins]->Fill(       iPhiBins,   JPsiPeakValue   );
+      RawYields[iCosThetaBins]->SetBinError(iPhiBins+1, JPsiPeakValueErr);
 
     }
     TFile f(Form("SignalExtraction/MonteCarloYieldsHe_%d.root", iCosThetaBins),   "recreate");
@@ -710,6 +763,30 @@ void ParseMC(){
     f.Close();
 
   }
+
+
+  TH1F* RawYieldsSimpleClosure = new TH1F("h", "h", 100, -0.5, 99.5);
+  for (Int_t iPhiBins = 0; iPhiBins < 24; iPhiBins++) {
+
+    JPsiPeakValue    = 0;
+    JPsiPeakValueErr = 0;
+    BkgValue         = 0;
+    BkgValueError    = 0;
+
+    fCohJpsiToMu     = (TH1F*)parsedMC->Get( Form( "InvMassH_closure_%d", iPhiBins ) );
+    JPsiPeakValue    = (Double_t) fCohJpsiToMu->GetEntries();
+    JPsiPeakValueErr = TMath::Sqrt((Double_t) fCohJpsiToMu->GetEntries());
+
+    // RawYieldsSimpleClosure->Fill(       iPhiBins,   JPsiPeakValue   /((PhiCenters[7]*2.)*(1.2)));
+    // RawYieldsSimpleClosure->SetBinError(iPhiBins+1, JPsiPeakValueErr/((PhiCenters[7]*2.)*(1.2)));
+    RawYieldsSimpleClosure->Fill(       iPhiBins,   JPsiPeakValue   );
+    RawYieldsSimpleClosure->SetBinError(iPhiBins+1, JPsiPeakValueErr);
+
+  }
+
+  TFile* SimpleClosure = new TFile("SignalExtraction/SimpleClosure.root", "RECREATE");
+  RawYieldsSimpleClosure->Write();
+  SimpleClosure->Close();
 
 
 }

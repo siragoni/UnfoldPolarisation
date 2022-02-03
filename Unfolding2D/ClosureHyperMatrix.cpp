@@ -107,11 +107,8 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
 
   TH1F *CosThetaRecH = new TH1F("CosThetaRecH", "CosThetaRecH", 25, -1., 1.);
   TH1F *CosThetaGenH = new TH1F("CosThetaGenH", "CosThetaGenH", 25, -1., 1.);
-  // TH1F *PhiRecH      = new TH1F("PhiRecH",      "PhiRecH",      25, 0., 2.*TMath::Pi());
-  // TH1F *PhiGenH      = new TH1F("PhiGenH",      "PhiGenH",      25, 0., 2.*TMath::Pi());
-  TH1F *PhiRecH      = new TH1F("PhiRecH",      "PhiRecH",      24, 0., 2.*TMath::Pi());
-  TH1F *PhiGenH      = new TH1F("PhiGenH",      "PhiGenH",      24, 0., 2.*TMath::Pi());
-  TH1F *PhiGenH2      = new TH1F("PhiGenH2",      "PhiGenH2",      24, 0., 2.*TMath::Pi());
+  TH1F *PhiRecH      = new TH1F("PhiRecH",      "PhiRecH",      25, 0., 2.*TMath::Pi());
+  TH1F *PhiGenH      = new TH1F("PhiGenH",      "PhiGenH",      25, 0., 2.*TMath::Pi());
   TH1F *TildePhiRecH = new TH1F("TildePhiRecH", "TildePhiRecH", 25, 0., 2.*TMath::Pi());
   TH1F *TildePhiGenH = new TH1F("TildePhiGenH", "TildePhiGenH", 25, 0., 2.*TMath::Pi());
   TH1F *PhiGenBinsH[24];
@@ -137,16 +134,19 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
   }
 
 
-
-  RooUnfoldResponse responsePhiSimple = RooUnfoldResponse(24,  0., 2.*TMath::Pi());
-
-
-
   Double_t Costhetahelp = -999.;
   Double_t phihelp      = -999.;
   Double_t Costhetahelp2 = -999.;
   Double_t phihelp2      = -999.;
   Double_t TriggerSelectionFlag = 1;
+
+
+
+  TH2F* AngularTruth = new TH2F("AngularTruth", "AngularTruth", 6, 0, 2.*TMath::Pi(), 24, -1, 1);
+  TH2F* AngularMeas  = new TH2F("AngularMeas",  "AngularMeas",  6, 0, 2.*TMath::Pi(), 24, -1, 1);
+  RooUnfoldResponse responseHyper;
+  responseHyper.Setup(AngularMeas, AngularTruth);
+
 
 
   //read all entries and fill the histograms
@@ -213,23 +213,55 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
           Costhetahelp = CosThetaHEgen2;
           Costhetahelp2 = CosThetaHErec - CosThetaHEgen2;
           phihelp2 = PhiHErec - PhiHEgen2;
+
+
+          AngularTruth->Fill((PhiHEgen+TMath::Pi()), CosThetaHEgen2);
+
           if( (pTrec > 0. && pTrec < 0.25) && (Yrec > -4. && Yrec < -2.5) ) {
 
 
-              if( (PhiHErec+TMath::Pi()) > 0. && (PhiHErec+TMath::Pi()) < 2.*TMath::Pi() ) {
+                // if(  ( CosThetaHErec > -1.                      && CosThetaHErec < (-1. + 1.*(0.08+0.01/3.) ) ) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 1.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 2.*(0.08+0.01/3.) )) ){continue;}
+                // if(  ( CosThetaHErec > (-1. + 2.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 3.*(0.08+0.01/3.) )) ){continue;}
+                // if(  ( CosThetaHErec > (-1. + 3.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 4.*(0.08+0.01/3.) )) ){continue;}
+                // if(  ( CosThetaHErec > (-1. + 4.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 5.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 5.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 6.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 6.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 7.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 7.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 8.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 8.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 9.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 9.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 10.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 10.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 11.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 11.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 12.*(0.08+0.01/3.) )) ){continue;}
+                // if(  ( CosThetaHErec > (-1. + 12.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 13.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 13.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 14.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 14.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 15.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 15.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 16.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 16.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 17.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 17.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 18.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 18.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 19.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 19.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 20.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 20.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 21.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 21.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 22.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 22.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 23.*(0.08+0.01/3.) )) ) {continue;}
+                // if(  ( CosThetaHErec > (-1. + 23.*(0.08+0.01/3.)) && CosThetaHErec < (-1. + 24.*(0.08+0.01/3.) )) ) {continue;}
+
+              if( (PhiHErec+TMath::Pi()) > 0. && (PhiHErec+TMath::Pi()) < 2.*TMath::Pi() ){
                   if(PhiHErec < 0.) PhiHErec = PhiHErec + 2.*TMath::Pi();
                   // responsePhi.Fill( PhiHErec, (PhiHEgen2+TMath::Pi()) );
                   PhiRecH->Fill( PhiHErec );
 
-                  if(  ( CosThetaHEgen2 > (-0.6) && CosThetaHEgen2 < (0.6) ) ) {
-                    responsePhiSimple.Fill( PhiHErec, (PhiHEgen2+TMath::Pi()) );
-                    PhiGenH2     ->Fill( (PhiHEgen2+TMath::Pi()) );
 
-                  }
-
+                  // for (Int_t iCounter = 0; iCounter < 24; iCounter++) {
+                  //   if(  ( CosThetaHErec > (-1. + ((Double_t) iCounter)*(0.08+0.01/3.)) && CosThetaHErec < (-1. + (((Double_t) iCounter)+1.)*(0.08+0.01/3.) )) )
+                  //   {
+                  //     responsePhi[iCounter].Fill( PhiHErec, (PhiHEgen2+TMath::Pi()) );
+                  //   } else {
+                  //     responsePhi[iCounter].Miss((PhiHEgen2+TMath::Pi()));
+                  //   }
+                  //
+                  // }
                   for (Int_t iCounter = 0; iCounter < 24; iCounter++) {
-                    if(  ( CosThetaHEgen2 > (-1. + ( (Double_t) iCounter)*(0.08+0.01/3.)) &&
-                           CosThetaHEgen2 < (-1. + (((Double_t) iCounter)+1.)*(0.08+0.01/3.) )) )
+                    if(  ( CosThetaHEgen2 > (-1. + ((Double_t) iCounter)*(0.08+0.01/3.)) && CosThetaHEgen2 < (-1. + (((Double_t) iCounter)+1.)*(0.08+0.01/3.) )) )
                     {
                       responsePhi[iCounter].Fill( PhiHErec, (PhiHEgen2+TMath::Pi()) );
                       PhiGenBinsH[iCounter]->Fill( (PhiHEgen2+TMath::Pi()) );
@@ -239,6 +271,14 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
 
                   }
 
+                  AngularMeas->Fill(PhiHErec, CosThetaHErec);
+                  responseHyper.Fill(PhiHErec, CosThetaHErec, (PhiHEgen+TMath::Pi()), CosThetaHEgen2);
+
+
+
+
+
+
 
               }
 
@@ -246,15 +286,8 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
                   // for (Int_t iCounter = 0; iCounter < 24; iCounter++) {
                   //   responsePhi[iCounter].Miss((PhiHEgen2+TMath::Pi()));
                   // }
-                  if(  ( CosThetaHEgen2 > (-0.6) && CosThetaHEgen2 < (0.6) ) ) {
-                    responsePhiSimple.Miss((PhiHEgen2+TMath::Pi()));
-                    PhiGenH2     ->Fill( (PhiHEgen2+TMath::Pi()) );
-
-                  }
-
                   for (Int_t iCounter = 0; iCounter < 24; iCounter++) {
-                    if(  ( CosThetaHEgen2 > (-1. + ((Double_t) iCounter)*(0.08+0.01/3.)) &&
-                           CosThetaHEgen2 < (-1. + (((Double_t) iCounter)+1.)*(0.08+0.01/3.) )) )
+                    if(  ( CosThetaHEgen2 > (-1. + ((Double_t) iCounter)*(0.08+0.01/3.)) && CosThetaHEgen2 < (-1. + (((Double_t) iCounter)+1.)*(0.08+0.01/3.) )) )
                     {
                       responsePhi[iCounter].Miss((PhiHEgen2+TMath::Pi()));
                       PhiGenBinsH[iCounter]->Fill( (PhiHEgen2+TMath::Pi()) );
@@ -262,6 +295,8 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
                     }
 
                   }
+                  responseHyper.Miss((PhiHEgen+TMath::Pi()), CosThetaHEgen2);
+
 
 
           }
@@ -302,11 +337,6 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
   }
 
 
-  TFile* fileDataRawSimple = new TFile("SignalExtraction/SimpleClosure.root");
-  TH1F *DataSimple = (TH1F*)fileDataRawSimple->Get("h");
-
-
-
   TH1F* histo[24];
   for (Int_t i = 4; i < 20; i++) {
     if( i == 0  || i == 1  || i == 2  || i == 3  ||
@@ -331,14 +361,6 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
   }
 
 
-  TH1F* histoSimple = new TH1F("histoSimple", "histoSimple", 24, 0., 2.*TMath::Pi());
-  for(Int_t j = 1; j < 30; j++){
-    histoSimple->SetBinContent(j, DataSimple->GetBinContent(j));
-    histoSimple->SetBinError(  j, DataSimple->GetBinError(j)  );
-  }
-
-
-
 
   // RooUnfoldBayes    unfold  (&responsePhi, Data, 1);
   // RooUnfoldBayes    unfold1 (&responsePhi, Data, 2);
@@ -356,21 +378,10 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     // unfold2[iC] = RooUnfoldBayes(&responsePhi[iC], Data[iC], 3);
     // unfold3[iC] = RooUnfoldBayes(&responsePhi[iC], Data[iC], 4);
     unfold[iC]  = RooUnfoldBayes(&responsePhi[iC], histo[iC], Iterations);
-    unfold1[iC] = RooUnfoldBayes(&responsePhi[iC], histo[iC], 4);
-    unfold2[iC] = RooUnfoldBayes(&responsePhi[iC], histo[iC], 10);
-    unfold3[iC] = RooUnfoldBayes(&responsePhi[iC], histo[iC], 20);
+    unfold1[iC] = RooUnfoldBayes(&responsePhi[iC], histo[iC], 1);
+    unfold2[iC] = RooUnfoldBayes(&responsePhi[iC], histo[iC], 2);
+    unfold3[iC] = RooUnfoldBayes(&responsePhi[iC], histo[iC], 3);
   }
-
-
-
-  RooUnfoldBayes    unfoldSimple;
-  RooUnfoldBayes    unfoldSimple1;
-  RooUnfoldBayes    unfoldSimple2;
-  RooUnfoldBayes    unfoldSimple3;
-  unfoldSimple  = RooUnfoldBayes(&responsePhiSimple, histoSimple, Iterations);
-  unfoldSimple1 = RooUnfoldBayes(&responsePhiSimple, histoSimple, 4);
-  unfoldSimple2 = RooUnfoldBayes(&responsePhiSimple, histoSimple, 10);
-  unfoldSimple3 = RooUnfoldBayes(&responsePhiSimple, histoSimple, 20);
 
 
 
@@ -391,31 +402,12 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     unfolded3[iC] = (TH1D*) unfold3[iC].Hreco();
   }
 
-  TH1D* refolded[24];
-  TH1D* refolded1[24];
-  TH1D* refolded2[24];
-  TH1D* refolded3[24];
-  for (Int_t iC = 4; iC < 20; iC++) {
-    refolded[iC]  = (TH1D*) responsePhi[iC].ApplyToTruth(unfolded[iC]);
-    refolded1[iC] = (TH1D*) responsePhi[iC].ApplyToTruth(unfolded1[iC]);
-    refolded2[iC] = (TH1D*) responsePhi[iC].ApplyToTruth(unfolded2[iC]);
-    refolded3[iC] = (TH1D*) responsePhi[iC].ApplyToTruth(unfolded3[iC]);
-  }
-
-
-
-  TH1D* unfoldedSimple  = (TH1D*) unfoldSimple.Hreco();
-  TH1D* unfoldedSimple1 = (TH1D*) unfoldSimple1.Hreco();
-  TH1D* unfoldedSimple2 = (TH1D*) unfoldSimple2.Hreco();
-  TH1D* unfoldedSimple3 = (TH1D*) unfoldSimple3.Hreco();
 
 
 
 
-  TH1D* refoldedSimple  = (TH1D*) responsePhiSimple.ApplyToTruth(unfoldedSimple);
-  TH1D* refoldedSimple1 = (TH1D*) responsePhiSimple.ApplyToTruth(unfoldedSimple1);
-  TH1D* refoldedSimple2 = (TH1D*) responsePhiSimple.ApplyToTruth(unfoldedSimple2);
-  TH1D* refoldedSimple3 = (TH1D*) responsePhiSimple.ApplyToTruth(unfoldedSimple3);
+
+
 
 
 
@@ -443,14 +435,6 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
       histo2[iC]->SetBinError(  i, unfolded[iC]->GetBinError(i)  );
     }
   }
-
-  TH1F* histoSimple2 = new TH1F("histoSimple2", "histoSimple2", 100, -0.5, 99.5);
-    for(Int_t i = 1; i < 30; i++){
-      histoSimple2->SetBinContent(i, unfoldedSimple->GetBinContent(i));
-      histoSimple2->SetBinError(  i, unfoldedSimple->GetBinError(i)  );
-    }
-
-
 
 
   TH1F* histo3[24];
@@ -492,254 +476,12 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
   //   histo2[iC]->Write();
   //   histo3[iC]->Write();
   //   PhiGenBinsH[iC]->Write();
-  //   // unfoldedSimple->Write();
-  //   // unfoldedSimple1->Write();
-  //   // unfoldedSimple2->Write();
-  //   // unfoldedSimple3->Write();
   //   SavingFile[iC]->Close();
   // }
 
-
-
-  TFile *SavingFileSimpleUnfold;
-    SavingFileSimpleUnfold  = new TFile("Unfolding2D/UnfoldedClosureHeSimple.root", "RECREATE");
-    // PhiRecH   ->Write();
-    // PhiGenH   ->Write();
-    // responsePhi[iC].Write();
-    responsePhiSimple.Write();
-    // unfolded[iC] ->Write();
-    // unfolded1[iC]->Write();
-    // unfolded2[iC]->Write();
-    // unfolded3[iC]->Write();
-    // histo[iC]->Write();
-    // histo2[iC]->Write();
-    // histo3[iC]->Write();
-    // PhiGenBinsH[iC]->Write();
-    unfoldedSimple->Write();
-    unfoldedSimple1->Write();
-    unfoldedSimple2->Write();
-    unfoldedSimple3->Write();
-    SavingFileSimpleUnfold->Close();
-
-
-
-    new TCanvas;
-    unfoldedSimple->SetLineColor(kRed);
-    unfoldedSimple1->SetLineColor(kBlue);
-    unfoldedSimple2->SetLineColor(kYellow);
-    unfoldedSimple3->SetLineColor(kGreen);
-    unfoldedSimple->Draw();
-    unfoldedSimple1->Draw("same");
-    unfoldedSimple2->Draw("same");
-    unfoldedSimple3->Draw("same");
-    PhiGenH2->SetLineColor(kBlack);
-    PhiGenH2->SetLineWidth(4);
-    PhiGenH2->Draw("same");
-    new TCanvas;
-    PhiGenH2->SetLineColor(kBlack);
-    PhiGenH2->SetLineWidth(4);
-    PhiGenH2->Draw("same");
-
-
-
-
-    new TCanvas;
-    refoldedSimple->Divide(histoSimple);
-    refoldedSimple1->Divide(histoSimple);
-    refoldedSimple2->Divide(histoSimple);
-    refoldedSimple3->Divide(histoSimple);
-    refoldedSimple->SetLineColor(kRed);
-    refoldedSimple1->SetLineColor(kBlue);
-    refoldedSimple2->SetLineColor(kYellow);
-    refoldedSimple3->SetLineColor(kGreen);
-    histoSimple->SetLineColor(kBlack);
-    histoSimple->SetLineWidth(3);
-    refoldedSimple->Draw("same");
-    refoldedSimple1->Draw("same");
-    refoldedSimple2->Draw("same");
-    refoldedSimple3->Draw("same");
-    histoSimple->Draw("same");
-
-
-
-
-
-
-
-
-
-    TLegend *leg_pt[24];
-    for (Int_t iC = 4; iC < 20; iC++) {
-    new TCanvas;
-    gPad->SetMargin(0.13,0.10,0.12,0.10);
-    gPad->SetTickx(1);
-    gPad->SetTicky(1);
-    gPad->SetGridx();
-    gPad->SetGridy();
-    gStyle->SetOptStat(0);
-
-    unfolded[iC]->SetLineColor(kRed);
-    unfolded[iC]->SetTitle("Generated MC vs unfolded reconstructed MC");
-    unfolded[iC]->GetXaxis()->SetTitleOffset(1.15);
-    unfolded[iC]->GetYaxis()->SetTitleOffset(1.25);
-    unfolded[iC]->GetXaxis()->SetTitleSize(0.045);
-    unfolded[iC]->GetYaxis()->SetTitleSize(0.045);
-    unfolded[iC]->GetXaxis()->SetLabelSize(0.045);
-    unfolded[iC]->GetYaxis()->SetLabelSize(0.045);
-    unfolded[iC]->GetXaxis()->SetTitleFont(42);
-    unfolded[iC]->GetYaxis()->SetTitleFont(42);
-    unfolded[iC]->GetXaxis()->SetLabelFont(42);
-    unfolded[iC]->GetYaxis()->SetLabelFont(42);
-
-    unfolded[iC]->GetXaxis()->SetTitle("#varphi");
-    unfolded[iC]->GetYaxis()->SetTitle("Unfolded MC");
-    unfolded[iC]->GetYaxis()->SetRangeUser(unfolded[iC]->GetMinimum()*0.7, unfolded[iC]->GetMaximum()*1.5);
-    // unfolded[iC]->SetLineWidth(5);
-
-    unfolded1[iC]->SetLineColor(kBlue);
-    unfolded2[iC]->SetLineColor(kYellow);
-    unfolded3[iC]->SetLineColor(kGreen);
-    unfolded[iC]->Draw();
-    unfolded1[iC]->Draw("same");
-    unfolded2[iC]->Draw("same");
-    unfolded3[iC]->Draw("same");
-    PhiGenBinsH[iC]->SetLineColor(kBlack);
-    PhiGenBinsH[iC]->SetLineWidth(4);
-    PhiGenBinsH[iC]->Draw("same");
-    leg_pt[iC] = new TLegend(0.5,0.45,0.85,0.79);
-    leg_pt[iC]->SetFillStyle(0);
-    leg_pt[iC]->SetBorderSize(0);
-    leg_pt[iC]->SetTextSize(0.042);
-    leg_pt[iC]->AddEntry(unfolded[iC],"1 iteration", "LP");
-    leg_pt[iC]->AddEntry(unfolded1[iC],"4 iteration", "LP");
-    leg_pt[iC]->AddEntry(unfolded2[iC],"10 iteration", "LP");
-    leg_pt[iC]->AddEntry(unfolded3[iC],"20 iteration", "LP");
-    leg_pt[iC]->Draw();
-    gPad->SaveAs(Form("Unfolding2D/closureplots/unfolded_%d.pdf", iC), "recreate");
-
-
-    }
-
-
-
-    TLegend *leg_pt2[24];
-    for (Int_t iC = 4; iC < 20; iC++) {
-    new TCanvas;
-    gPad->SetMargin(0.13,0.10,0.12,0.10);
-    gPad->SetTickx(1);
-    gPad->SetTicky(1);
-    gPad->SetGridx();
-    gPad->SetGridy();
-    gStyle->SetOptStat(0);
-
-    refolded[iC]->SetLineColor(kRed);
-    refolded[iC]->SetTitle("Ratio of refolded MC to reconstructed MC");
-    refolded[iC]->GetXaxis()->SetTitleOffset(1.15);
-    refolded[iC]->GetYaxis()->SetTitleOffset(1.25);
-    refolded[iC]->GetXaxis()->SetTitleSize(0.045);
-    refolded[iC]->GetYaxis()->SetTitleSize(0.045);
-    refolded[iC]->GetXaxis()->SetLabelSize(0.045);
-    refolded[iC]->GetYaxis()->SetLabelSize(0.045);
-    refolded[iC]->GetXaxis()->SetTitleFont(42);
-    refolded[iC]->GetYaxis()->SetTitleFont(42);
-    refolded[iC]->GetXaxis()->SetLabelFont(42);
-    refolded[iC]->GetYaxis()->SetLabelFont(42);
-
-    refolded[iC]->GetXaxis()->SetTitle("#varphi");
-    refolded[iC]->GetYaxis()->SetTitle("Refolded ratio to reconstructed MC");
-    refolded[iC]->GetYaxis()->SetRangeUser(0.95, 1.05);
-    // unfolded[iC]->SetLineWidth(5);
-
-    refolded1[iC]->SetLineColor(kBlue);
-    refolded2[iC]->SetLineColor(kYellow);
-    refolded3[iC]->SetLineColor(kGreen);
-    refolded[iC]->Divide(histo[iC]);
-    refolded1[iC]->Divide(histo[iC]);
-    refolded2[iC]->Divide(histo[iC]);
-    refolded3[iC]->Divide(histo[iC]);
-    refolded[iC]->Draw();
-    refolded1[iC]->Draw("same");
-    refolded2[iC]->Draw("same");
-    refolded3[iC]->Draw("same");
-
-    leg_pt2[iC] = new TLegend(0.5,0.45,0.85,0.79);
-    leg_pt2[iC]->SetFillStyle(0);
-    leg_pt2[iC]->SetBorderSize(0);
-    leg_pt2[iC]->SetTextSize(0.042);
-    leg_pt2[iC]->AddEntry(refolded[iC],"1 iteration", "LP");
-    leg_pt2[iC]->AddEntry(refolded1[iC],"4 iteration", "LP");
-    leg_pt2[iC]->AddEntry(refolded2[iC],"10 iteration", "LP");
-    leg_pt2[iC]->AddEntry(refolded3[iC],"20 iteration", "LP");
-    leg_pt2[iC]->Draw();
-    gPad->SaveAs(Form("Unfolding2D/closureplots/refolded_%d.pdf", iC), "recreate");
-
-
-    }
-
-
-    Double_t M = 1.;
-    TH1F* histo4[24];
-    for (Int_t iC = 4; iC < 20; iC++) {
-      histo4[iC] = new TH1F(Form("histo4_%d", iC), Form("histo4_%d", iC), 100, -0.5, 99.5);
-      // if( iC == 0  || iC == 1  || iC == 2  || iC == 3  ||
-      //     iC == 4  || iC == 23 || iC == 22 || iC == 21 ||
-      //     iC == 20 || iC == 19 )
-      // {
-      //   M = 24;
-      // } else if ( iC == 5  || iC == 6  || iC == 18  || iC == 17 ) {
-      //   M = 4;
-      // } else if ( iC == 7  || iC == 8  || iC == 16  || iC == 15 ) {
-      //   M = 2;
-      // } else if ( iC == 9  || iC == 10  || iC == 11  ||
-      //             iC == 12 || iC == 13  || iC == 14 ) {
-      //   M = 1;
-      // }
-      if( iC == 0  || iC == 1  || iC == 2  || iC == 3  ||
-          iC == 4  || iC == 23 || iC == 22 || iC == 21 ||
-          iC == 20 || iC == 19 )
-      {
-        M = 1;
-      } else if ( iC == 5  || iC == 6  || iC == 18  || iC == 17 ) {
-        M = 6;
-      } else if ( iC == 7  || iC == 8  || iC == 16  || iC == 15 ) {
-        M = 12;
-      } else if ( iC == 9  || iC == 10  || iC == 11  ||
-                  iC == 12 || iC == 13  || iC == 14 ) {
-        M = 24;
-      }
-
-      for(Int_t i = 1; i < 30; i++){
-        // histo4[iC]->SetBinContent(i, histo2[iC]->GetBinContent(i)/((Double_t) M));
-        // histo4[iC]->SetBinError(  i, histo2[iC]->GetBinError(i)/((Double_t) M));
-        histo4[iC]->SetBinContent(i, histo2[iC]->GetBinContent(i)*((Double_t) M));
-        histo4[iC]->SetBinError(  i, histo2[iC]->GetBinError(i)*((Double_t) M));
-      }
-    }
-
-
-
-    TFile *SavingFile[24];
-    for (Int_t iC = 4; iC < 20; iC++) {
-      SavingFile[iC]  = new TFile(Form("Unfolding2D/UnfoldedClosureHe_%d.root", iC), "RECREATE");
-      PhiRecH   ->Write();
-      PhiGenH   ->Write();
-      responsePhi[iC].Write();
-      unfolded[iC] ->Write();
-      unfolded1[iC]->Write();
-      unfolded2[iC]->Write();
-      unfolded3[iC]->Write();
-      histo[iC]->Write();
-      histo2[iC]->Write();
-      histo3[iC]->Write();
-      histo4[iC]->Write();
-      PhiGenBinsH[iC]->Write();
-      // unfoldedSimple->Write();
-      // unfoldedSimple1->Write();
-      // unfoldedSimple2->Write();
-      // unfoldedSimple3->Write();
-      SavingFile[iC]->Close();
-    }
-
+  TFile* SavingFileHyper = new TFile("Hyper.root", "RECREATE");
+  responseHyper.Write();
+  SavingFileHyper->Close();
 
 
 }

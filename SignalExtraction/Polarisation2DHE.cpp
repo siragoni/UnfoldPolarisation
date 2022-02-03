@@ -408,6 +408,12 @@ void fitJPsiTemplate( const int selectionFlag, const int selectionFlag2, Int_t S
   } else if((selectionFlag == 4 || selectionFlag == 18 || selectionFlag == 19) && selectionFlag2 == 0) {
     fFitInvMass->SetParameter(15, 25);
     fFitInvMass->SetParLimits(15, 10, 9999999999);
+  } else if((selectionFlag == 6) && selectionFlag2 == 5) {
+    fFitInvMass->SetParameter(15, 25);
+    fFitInvMass->SetParLimits(15, 10, 9999999999);
+  } else if((selectionFlag == 9) && selectionFlag2 == 19) {
+    fFitInvMass->SetParameter(15, 25);
+    fFitInvMass->SetParLimits(15, 10, 9999999999);
   } else {
     fFitInvMass->SetParameter(15, 1);
   }
@@ -745,8 +751,8 @@ void CreateCosThetaTh2(){
   }
 
 
-  for (Int_t iCosThetaBins = 4; iCosThetaBins < 20; iCosThetaBins++) {
-  // for (Int_t iCosThetaBins = 11; iCosThetaBins < 12; iCosThetaBins++) {
+  // for (Int_t iCosThetaBins = 4; iCosThetaBins < 20; iCosThetaBins++) {
+  for (Int_t iCosThetaBins = 9; iCosThetaBins < 10; iCosThetaBins++) {
 
     for (Int_t iPhiBins = 0; iPhiBins < Counter[iCosThetaBins]; iPhiBins++) {
     // for (Int_t iPhiBins = 22; iPhiBins < 23; iPhiBins++) {
@@ -763,11 +769,13 @@ void CreateCosThetaTh2(){
       // cout << "CHECKPOINT 3 " << endl << flush;
 
 
-      RawYields[iCosThetaBins]->Fill(       iPhiBins,   JPsiPeakValue   /((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
-      RawYields[iCosThetaBins]->SetBinError(iPhiBins+1, JPsiPeakValueErr/((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
+      // RawYields[iCosThetaBins]->Fill(       iPhiBins,   JPsiPeakValue   /((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
+      // RawYields[iCosThetaBins]->SetBinError(iPhiBins+1, JPsiPeakValueErr/((PhiCenters[iCosThetaBins]*2.)*(0.08+0.01/3.)));
+      RawYields[iCosThetaBins]->Fill(       iPhiBins,   JPsiPeakValue   );
+      RawYields[iCosThetaBins]->SetBinError(iPhiBins+1, JPsiPeakValueErr);
 
     }
-    TFile f(Form("SignalExtraction/RawYieldsHe_%d.root", iCosThetaBins),   "recreate");
+    TFile f(Form("SignalExtraction/RawYieldsHeV3_%d.root", iCosThetaBins),   "recreate");
     RawYields[iCosThetaBins]->Write();
     f.Close();
 

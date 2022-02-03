@@ -2,13 +2,9 @@
 <alien>
   <collection name="collection">
     <event name="1">
-      <file name="AliAOD.root" aclId="" broken="0" ctime="2018-12-25 23:45:24" dir="190140254" entryId="190140307" expiretime="" gowner="z2" guid="B486C070-0896-11E9-9E3D-2BE252FACD0D" guidtime="11E90896" jobid="1347237310" lfn="/alice/sim/2018/LHC18l7/kCohJpsiToMu/295829/AOD/001/AliAOD.root" md5="841ce5bc6182d2e3b629d4a5e7e26ca5" owner="aliprod" perm="755" replicated="0" size="11456857" turl="alien:///alice/sim/2018/LHC18l7/kCohJpsiToMu/295829/AOD/001/AliAOD.root" type="f" />
+      <file name="AliAOD.root" aclId="" broken="0" ctime="2018-12-25 18:37:58" dir="190098839" entryId="190098873" expiretime="" gowner="z2" guid="C6854A38-086B-11E9-A263-5FB78E7D41EF" guidtime="11E9086B" jobid="1347172319" lfn="/alice/sim/2018/LHC18l7/kCohJpsiToMu/295585/AOD/001/AliAOD.root" md5="17861ea61ccf612c6750970aa7685075" owner="aliprod" perm="755" replicated="0" size="5902744" turl="alien:///alice/sim/2018/LHC18l7/kCohJpsiToMu/295585/AOD/001/AliAOD.root" type="f" />
     </event>
-    <event name="2">
-      <file name="AliAOD.root" aclId="" broken="0" ctime="2018-12-25 23:45:34" dir="190140255" entryId="190140317" expiretime="" gowner="z2" guid="B85544F6-0896-11E9-A0F8-833C1ADB7F06" guidtime="11E90896" jobid="1347237311" lfn="/alice/sim/2018/LHC18l7/kCohJpsiToMu/295829/AOD/002/AliAOD.root" md5="fe1d445f93d4ed896dd9d75512a62955" owner="aliprod" perm="755" replicated="0" size="34300403" turl="alien:///alice/sim/2018/LHC18l7/kCohJpsiToMu/295829/AOD/002/AliAOD.root" type="f" />
-    </event>
-    <info command="[/alice/cern.ch/user/s/siragoni/]: find -z -x collection -l 10 -o 0 /alice/sim/2018/LHC18l7/kCohJpsiToMu//295829 *AOD/*AliAOD.root" creator="admin" date="Mon Dec  6 20:01:53 CET 2021" timestamp="1638817313" />
+    <info command="[/alice/cern.ch/user/s/siragoni/]: find -z -x collection -l 10 -o 0 /alice/sim/2018/LHC18l7/kCohJpsiToMu//295585 *AOD/*AliAOD.root" creator="admin" date="Sat Jan  8 10:13:49 CET 2022" timestamp="1641633229" />
   </collection>
 </alien>
-
 

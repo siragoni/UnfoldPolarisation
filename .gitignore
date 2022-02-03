@@ -1,0 +1,10 @@
+AliAnalysisTaskNanoJPsi2016Fwd_*
+MC_*
+MC.sh
+*.root
+Trigger/*
+TriggerUncert/*
+Unfolding2D/closureplots/*
+*.pdf
+pngResults/*
+misc/*

@@ -156,8 +156,9 @@ void PolarisationHeMinuit2D(Int_t FitRangeMode = 0 ){
   TH1F*  h[24];
   for (Int_t i = 4; i < 20; i++) {
     f[i] = new TFile(Form("Unfolding2D/UnfoldedClosureHe_%d.root", i));
-    h[i] = (TH1F*) f[i]->Get(Form("histo2_%d", i));
-    // h[i] = (TH1F*) f[i]->Get(Form("histo3_%d", i));
+    // h[i] = (TH1F*) f[i]->Get(Form("histo2_%d", i));
+    // h[i] = (TH1F*) f[i]->Get(Form("histo4_%d", i));
+    h[i] = (TH1F*) f[i]->Get(Form("histo3_%d", i));
   }
 
   Double_t integrals[24];
@@ -265,6 +266,7 @@ void PolarisationHeMinuit2D(Int_t FitRangeMode = 0 ){
   values  = std::vector<Double_t>();
   errors  = std::vector<Double_t>();
   /// fill data structure
+  // for (size_t iCosThetaBins = 7; iCosThetaBins < 18; iCosThetaBins++) {
   for (size_t iCosThetaBins = 5; iCosThetaBins < 19; iCosThetaBins++) {
   // for (size_t iCosThetaBins = 7; iCosThetaBins < 17; iCosThetaBins++) {
     // if        ( FitRangeMode == 1 ) {

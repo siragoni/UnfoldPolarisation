@@ -156,7 +156,8 @@ void PolarisationHeMinuit2D(Int_t FitRangeMode = 0 ){
   TH1F*  h[24];
   for (Int_t i = 4; i < 20; i++) {
     f[i] = new TFile(Form("Unfolding2D/UnfoldHeV2_%d.root", i));
-    h[i] = (TH1F*) f[i]->Get(Form("histo2_%d", i));
+    // h[i] = (TH1F*) f[i]->Get(Form("histo2_%d", i));
+    h[i] = (TH1F*) f[i]->Get(Form("histo4_%d", i));
   }
 
   Double_t integrals[24];
@@ -264,8 +265,8 @@ void PolarisationHeMinuit2D(Int_t FitRangeMode = 0 ){
   values  = std::vector<Double_t>();
   errors  = std::vector<Double_t>();
   /// fill data structure
-  for (size_t iCosThetaBins = 5; iCosThetaBins < 19; iCosThetaBins++) {
-  // for (size_t iCosThetaBins = 8; iCosThetaBins < 16; iCosThetaBins++) {
+  // for (size_t iCosThetaBins = 5; iCosThetaBins < 19; iCosThetaBins++) {
+  for (size_t iCosThetaBins = 6; iCosThetaBins < 18; iCosThetaBins++) {
     // if        ( FitRangeMode == 1 ) {
     //   if (iCosThetaBins      == 5)   continue;
     // } else if ( FitRangeMode == 2 ) {
@@ -602,9 +603,9 @@ void PolarisationHeMinuit2D(Int_t FitRangeMode = 0 ){
   gMinuit->DefineParameter(0, "LambdaTheta",        1., 0.1,    -2, 2        );
   gMinuit->DefineParameter(1, "LambdaPhi",           0, 0.1,    -2, 2        );
   gMinuit->DefineParameter(2, "LambdaThetaPhi",      0, 0.1,    -2, 2        );
-  // gMinuit->DefineParameter(3, "Normalisation",   2420000, 100, 1, 10000000    );
+  gMinuit->DefineParameter(3, "Normalisation",   2420000, 100, 1, 10000000    );
   // gMinuit->DefineParameter(3, "Normalisation",   (394082.*3./(4.*TMath::Pi())), 0, 1, 10000000    ); // from projection
-  gMinuit->DefineParameter(3, "Normalisation",   (394082.*3./(4.*TMath::Pi())), 100, ((394082.-2.*19165.5)*3./(4.*TMath::Pi())), ((394082.+2.*19165.5)*3./(4.*TMath::Pi()))    ); // from projection
+  // gMinuit->DefineParameter(3, "Normalisation",   (394082.*3./(4.*TMath::Pi())), 100, ((394082.-2.*19165.5)*3./(4.*TMath::Pi())), ((394082.+2.*19165.5)*3./(4.*TMath::Pi()))    ); // from projection
   gMinuit->Command("SIMPLEX");
   gMinuit->Command("MIGRAD");
   gMinuit->Command("MIGRAD");

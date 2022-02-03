@@ -350,7 +350,22 @@ void ParseMC(){
 
 
 
-  Double_t controlFlag = 0;
+
+  TH1F* InvMassH_closure[24];  // -1 + 24*(0.08+0.01/3.)
+  for(Int_t iCosThetaBins = 0; iCosThetaBins < 24; iCosThetaBins++ ){
+    InvMassH_closure[iCosThetaBins] = new TH1F(
+                // Form("InvMassH_closure%d", iCosThetaBins),
+                // Form("InvMassH_closure%d", iCosThetaBins),
+                Form("InvMassH_closure_%d", iCosThetaBins),
+                Form("InvMassH_closure_%d", iCosThetaBins),
+                2000, 0, 20
+                );
+  }
+
+
+
+  Double_t controlFlag  = 0;
+  Double_t controlFlag2 = 0;
 
   //read all entries and fill the histograms
   for (Int_t i=0; i<nentriesRec; i++) {
@@ -372,7 +387,16 @@ void ParseMC(){
 
                   if(PhiHErec < 0.) PhiHErec = PhiHErec + 2.*TMath::Pi();
 
-
+                  controlFlag2 = 0;
+                  if (        CosThetaHEgen2 > -1. && CosThetaHEgen2 < 1. ){
+                    for(Int_t i = 0; i < 24; i++) {
+                      if( controlFlag2 == 1) break;
+                      if( (PhiHErec) < ((Double_t)i + 1.)*2.*TMath::Pi()/24. ) {
+                        InvMassH_closure[i]->Fill(Mrec);
+                        controlFlag2 = 1;
+                      }
+                    }
+                  }
 
 
                   controlFlag = 0;

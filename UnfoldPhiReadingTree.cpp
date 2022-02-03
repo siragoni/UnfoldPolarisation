@@ -20,7 +20,7 @@
 // #include <RooUnfold.h>
 
 
-void UnfoldPhiReadingTree(Int_t Iterations = 1){
+void UnfoldPhiReadingTree(){
 
   #ifdef __CINT__
   // if (!TClass::GetDict("RooUnfold")) gSystem->Load("../RooUnfold/libRooUnfold");
@@ -125,95 +125,84 @@ void UnfoldPhiReadingTree(Int_t Iterations = 1){
     GenerTree->GetEntry(i);
     Flag = -999.;
     Flag2 = -999.;
-    // CosThetaHEgen2 = -1.*CosThetaHEgen;
-    // if((CosThetaHEgen < 1.) || (CosThetaHEgen > -1.)){
       if( (pTgen > 0. && pTgen < 0.25) && (Ygen > -4. && Ygen < -2.5) ) {
-        Flag2 = r3->Uniform(0,1);
-
         CosThetaHEgen2 = -1.*CosThetaHEgen;
-        // if((CosThetaHEgen2 < 0.3) && (CosThetaHEgen2 > -0.3)){
-        if((CosThetaHEgen2 < 1.0) && (CosThetaHEgen2 > -1.0)){
         PhiHEgen2 = PhiHEgen;
         /* -
          * - Retranslating the distributions...
          */
-        // TildePhiHEposgen2  = PhiHEgen2 - 0.25 * TMath::Pi() ;
-        // TildePhiHEneggen2  = PhiHEgen2 - 0.75 * TMath::Pi() ;
-        TildePhiHEposgen2  = PhiHEgen2 - 1.25 * TMath::Pi() ;
-        TildePhiHEneggen2  = PhiHEgen2 - 1.75 * TMath::Pi() ;
+        TildePhiHEposgen2  = PhiHEgen2 - 0.25 * TMath::Pi() ;
+        TildePhiHEneggen2  = PhiHEgen2 - 0.75 * TMath::Pi() ;
         if( TildePhiHEposgen2 < 0. ) {
           TildePhiHEposgen2 += 2. * TMath::Pi();
-        }
-        if( TildePhiHEposgen2 < 0. ) {
-          TildePhiHEposgen2 += 2. * TMath::Pi();
-        }
-        if( TildePhiHEneggen2 < 0. ) {
-          TildePhiHEneggen2 += 2. * TMath::Pi();
         }
         if( TildePhiHEneggen2 < 0. ) {
           TildePhiHEneggen2 += 2. * TMath::Pi();
         }
 
+        // TildePhiHEposgen2 = TildePhiHEposgen;
+        // TildePhiHEneggen2 = TildePhiHEneggen;
+        // Costhetahelp = CosThetaHEgen2;
+        // Costhetahelp2 = CosThetaHErec - CosThetaHEgen2;
+        // phihelp2 = PhiHErec - PhiHEgen2;
         if ( CosThetaHEgen2 > 0. ){
             TildePhiGenH->Fill( TildePhiHEposgen2 );
         } else {
             TildePhiGenH->Fill( TildePhiHEneggen2 );
         }
 
-        // if ( PhiGenH->GetBinContent(PhiGenH->FindBin(PhiHEgen2+TMath::Pi())) < (14500.*25./(2.*TMath::Pi()))*(1.+0.5*1.*TMath::Cos(2.*(PhiHEgen2+TMath::Pi()) ) ) ){
-        if ( PhiGenH->GetBinContent(PhiGenH->FindBin(PhiHEgen2+TMath::Pi())) < (1000.*25./(2.*TMath::Pi()))*(1.+0.5*1.*TMath::Cos(2.*(PhiHEgen2+TMath::Pi()) ) ) ){
+        if ( PhiGenH->GetBinContent(PhiGenH->FindBin(PhiHEgen2+TMath::Pi())) < (10000.*25./(2.*TMath::Pi()))*(1.+0.5*0.1*TMath::Cos(2.*(PhiHEgen2+TMath::Pi()) ) ) ){
 
           PhiGenH     ->Fill( (PhiHEgen2+TMath::Pi()) );
-          // PhiGenH     ->Fill( PhiHEgen2 );
           CosThetaGenH->Fill( CosThetaHEgen2          );
           Flag = 1;
         }
+        // if ( PhiGenH->GetBinContent(PhiGenH->FindBin(PhiHEgen+TMath::Pi())) < (10000.*25./(2.*TMath::Pi()))*(1.+0.5*0.1*TMath::Cos(2.*(PhiHEgen+TMath::Pi()) ) ) ){
+        //
+        //   Flag2 = 1;
+        // }
 
+          // if ( CosThetaHEgen > 0. ){
+          //     TildePhiGenH->Fill( TildePhiHEposgen );
+          // } else {
+          //     TildePhiGenH->Fill( TildePhiHEneggen );
+          // }
           if( (pTrec > 0. && pTrec < 0.25) && (Yrec > -4. && Yrec < -2.5) ) {
-
+              // if ( PhiRecH->GetBinContent(PhiRecH->FindBin(PhiHErec+TMath::Pi())) < (1000.*25./(2.*TMath::Pi()))*(1.+0.5*TMath::Cos(2.*(PhiHErec+TMath::Pi()) ) ) ){
+                // continue;
+              // }
               if( (PhiHErec+TMath::Pi()) > 0. && (PhiHErec+TMath::Pi()) < 2.*TMath::Pi() ){
-                  if(PhiHErec < 0.) PhiHErec = PhiHErec + 2.*TMath::Pi();
-                  // Flag2 = r3->Uniform(0,1);
+                if(PhiHErec < 0.) PhiHErec = PhiHErec + 2.*TMath::Pi();
+                  Flag2 = r3->Uniform(0,1);
+                  // if (Flag2 > 1.){
                   if (Flag > 0.){
-                    // responsePhi.Fill( (PhiHErec+TMath::Pi()), (PhiHEgen+TMath::Pi()) );
-                    responsePhi.Fill( PhiHErec, (PhiHEgen2+TMath::Pi()) );
-                  // } else {
-                  //   if (Flag2 > 0.0){
-                  //     // responsePhi.Fill( (PhiHErec+TMath::Pi()), (PhiHEgen+TMath::Pi()) );
-                  //     responsePhi.Fill( PhiHErec, (PhiHEgen2+TMath::Pi()) );
-                  //   }
+                  responsePhi.Fill( (PhiHErec+TMath::Pi()), (PhiHEgen+TMath::Pi()) );
+                    // responsePhi.Fill( PhiHErec, (PhiHEgen+TMath::Pi()) );
+                    // PhiRecMinusGenH->Fill(PhiHErec-PhiHEgen);
+                  } else {
+                    if (Flag2 > 0.0){
+                      responsePhi.Fill( (PhiHErec+TMath::Pi()), (PhiHEgen+TMath::Pi()) );
+                    }
                   }
-
+                  // if ( PhiRecH->GetBinContent(PhiRecH->FindBin(PhiHErec+TMath::Pi())) < (1000.*25./(2.*TMath::Pi()))*(1.+0.5*TMath::Cos(2.*(PhiHErec+TMath::Pi()) ) ) ){
                   if ( Flag > 0. ){
-                    PhiRecH->Fill( PhiHErec );
+                    // responsePhi.Fill( (PhiHErec+TMath::Pi()), (PhiHEgen+TMath::Pi()) );
+
+                    // PhiRecH->Fill( (PhiHErec+TMath::Pi()) );
+                  PhiRecH->Fill( PhiHErec );
                   }
-              }
-              /*
-               * TildePhi response matrix
-              **/
-              TildePhiHEposrec2  = PhiHErec - 0.25 * TMath::Pi() ;
-              TildePhiHEnegrec2  = PhiHErec - 0.75 * TMath::Pi() ;
-              // TildePhiHEposrec2  = PhiHErec - 1.*TMath::Pi() - 0.25 * TMath::Pi() ;
-              // TildePhiHEnegrec2  = PhiHErec - 1.*TMath::Pi() - 0.75 * TMath::Pi() ;
-              if( TildePhiHEposrec2 < 0. ) {
-                TildePhiHEposrec2 += 2. * TMath::Pi();
-              }
-              if( TildePhiHEnegrec2 < 0. ) {
-                TildePhiHEnegrec2 += 2. * TMath::Pi();
               }
               if ( CosThetaHErec > 0. ){
-                  // if( TildePhiHEposrec2 > 0. && TildePhiHEposrec2 < 2.*TMath::Pi() ){
-                      responseTildePhi.Fill( TildePhiHEposrec2, TildePhiHEposgen2 );
-                      TildePhiRecH->Fill( TildePhiHEposrec2 );
-                  // }
+                  if( TildePhiHEposrec > 0. && TildePhiHEposrec < 2.*TMath::Pi() ){
+                      responseTildePhi.Fill( TildePhiHEposrec, TildePhiHEposgen );
+                      TildePhiRecH->Fill( TildePhiHEposrec );
+                  }
               } else {
-                  // if( TildePhiHEnegrec2 > 0. && TildePhiHEnegrec2 < 2.*TMath::Pi() ){
-                      responseTildePhi.Fill( TildePhiHEnegrec2, TildePhiHEneggen2 );
-                      TildePhiRecH->Fill( TildePhiHEnegrec2 );
-                  // }
+                  if( TildePhiHEnegrec > 0. && TildePhiHEnegrec < 2.*TMath::Pi() ){
+                      responseTildePhi.Fill( TildePhiHEnegrec, TildePhiHEneggen );
+                      TildePhiRecH->Fill( TildePhiHEnegrec );
+                  }
               }
-
-
               if( CosThetaHErec > -1. && CosThetaHErec < 1. ){
                   responseCosTheta.Fill( CosThetaHErec, CosThetaHEgen2 );
                   CosThetaRecH->Fill( CosThetaHErec );
@@ -222,33 +211,28 @@ void UnfoldPhiReadingTree(Int_t Iterations = 1){
               }
               // }
           } else {
-                if ( Flag > 0. ){
-                  responsePhi.Miss( (PhiHEgen2+TMath::Pi()) );
-                // } else {
-                //   if (Flag2 > 0.0){
-                //     // responsePhi.Fill( (PhiHErec+TMath::Pi()), (PhiHEgen+TMath::Pi()) );
-                //     responsePhi.Miss( (PhiHEgen2+TMath::Pi()) );
-                //   }
+                  if ( Flag > 0. ){
+                  responsePhi.Miss( (PhiHEgen+TMath::Pi()) );
                 }
                   if ( CosThetaHErec > 0. ){
-                      responseTildePhi.Miss( TildePhiHEposgen2 );
+                      responseTildePhi.Miss( TildePhiHEposgen );
                   } else {
-                      responseTildePhi.Miss( TildePhiHEneggen2 );
+                      responseTildePhi.Miss( TildePhiHEneggen );
                   }
-                  responseCosTheta.Miss( CosThetaHEgen2 );
+                  responseCosTheta.Miss( CosThetaHEgen );
 
           }
         // }
       }
-    }
+
   }
 
 
 
-  RooUnfoldBayes    unfold  (&responsePhi, PhiRecH, Iterations);
-  RooUnfoldBayes    unfold1 (&responsePhi, PhiRecH, 5);
-  RooUnfoldBayes    unfold2 (&responsePhi, PhiRecH, 10);
-  RooUnfoldBayes    unfold3 (&responsePhi, PhiRecH, 20);
+  RooUnfoldBayes    unfold  (&responsePhi, PhiRecH, 1);
+  RooUnfoldBayes    unfold1 (&responsePhi, PhiRecH, 2);
+  RooUnfoldBayes    unfold2 (&responsePhi, PhiRecH, 3);
+  RooUnfoldBayes    unfold3 (&responsePhi, PhiRecH, 4);
   // RooUnfoldSvd      unfold (&response, hist_measured, kterm);
   // RooUnfoldBinByBin unfold (&response, hist_measured);
 
@@ -276,8 +260,8 @@ void UnfoldPhiReadingTree(Int_t Iterations = 1){
   fit->FixParameter(3,4.29585e-02);
   fit->FixParameter(2,6.09946);
   // fit->SetParameter(2,0.000000001);
-  unfolded1->Draw();
-  unfolded1->Fit("fit");
+  unfolded->Draw();
+  unfolded->Fit("fit");
 
 
   TF1* fit2 = new TF1("fit2", "[0]*(1.+0.5*[1]*cos(2.*x) )", 0, 2.*TMath::Pi());
