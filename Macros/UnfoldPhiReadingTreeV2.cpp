@@ -98,8 +98,8 @@ void UnfoldPhiReadingTree(Int_t Iterations = 1){
   TH1F *CosThetaRecMinusGenH = new TH1F("CosThetaRecMinusGenH", "CosThetaRecMinusGenH", 50, -2., 2.);
 
 
-  TH1F *CosThetaRecH = new TH1F("CosThetaRecH", "CosThetaRecH", 25, -1., 1.);
-  TH1F *CosThetaGenH = new TH1F("CosThetaGenH", "CosThetaGenH", 25, -1., 1.);
+  TH1F *CosThetaRecH = new TH1F("CosThetaRecH", "CosThetaRecH", 24, -1., 1.);
+  TH1F *CosThetaGenH = new TH1F("CosThetaGenH", "CosThetaGenH", 24, -1., 1.);
   // TH1F *PhiRecH      = new TH1F("PhiRecH",      "PhiRecH",      25, 0., 2.*TMath::Pi());
   // TH1F *PhiGenH      = new TH1F("PhiGenH",      "PhiGenH",      25, 0., 2.*TMath::Pi());
   TH1F *PhiRecH      = new TH1F("PhiRecH",      "PhiRecH",      250, 0., 2.*TMath::Pi());
@@ -383,6 +383,8 @@ void UnfoldPhiReadingTree(Int_t Iterations = 1){
   TFile *SavingFile = new TFile("SavingFile.root", "RECREATE");
   PhiRecH          ->Write();
   PhiGenH          ->Write();
+  CosThetaRecH          ->Write();
+  CosThetaGenH          ->Write();
   PhiRecMinusGenH->Write();
   CosThetaRecMinusGenH->Write();
   responsePhi.Write();

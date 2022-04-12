@@ -16,6 +16,7 @@
 #include <TMarker.h>
 #include <stdio.h>
 #include <iostream>
+#include "TMatrixD.h"
 // #include "RooUnfoldResponse.h"
 // #include <RooUnfold.h>
 
@@ -56,6 +57,7 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
   Double_t CosThetaHEgen;
   Double_t CosThetaHErec2;
   Double_t CosThetaHEgen2;
+  Double_t CosThetaHEgen3;
   ReconTree->SetBranchAddress("fCosThetaHE",  &CosThetaHErec);
   GenerTree->SetBranchAddress("fMCCosThetaHE",&CosThetaHEgen);
   Double_t CosThetaCSrec;
@@ -115,6 +117,7 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
   TH1F *TildePhiRecH = new TH1F("TildePhiRecH", "TildePhiRecH", 25, 0., 2.*TMath::Pi());
   TH1F *TildePhiGenH = new TH1F("TildePhiGenH", "TildePhiGenH", 25, 0., 2.*TMath::Pi());
   TH1F *PhiGenBinsH[24];
+  TH1F *PhiRecBinsH[24];
 
   Int_t N = 1;
   RooUnfoldResponse responsePhi[24];
@@ -134,6 +137,7 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     }
     responsePhi[i] = RooUnfoldResponse(N,  0., 2.*TMath::Pi());
     PhiGenBinsH[i] = new TH1F(Form("PhiGenBinsH_%d", i), Form("PhiGenBinsH_%d", i), N, 0., 2.*TMath::Pi());
+    PhiRecBinsH[i] = new TH1F(Form("PhiRecBinsH_%d", i), Form("PhiRecBinsH_%d", i), N, 0., 2.*TMath::Pi());
   }
 
 
@@ -201,6 +205,15 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     } else {
       TriggerSelectionFlag = 1;
     }
+    CosThetaHEgen3 = -1.*CosThetaHEgen;
+    // for (Int_t iCounter = 0; iCounter < 24; iCounter++) {
+    //   if(  ( CosThetaHEgen3 > (-1. + ( (Double_t) iCounter)*(0.08+0.01/3.)) &&
+    //          CosThetaHEgen3 < (-1. + (((Double_t) iCounter)+1.)*(0.08+0.01/3.) )) )
+    //   {
+    //     PhiGenBinsH[iCounter]->Fill( (PhiHEgen+TMath::Pi()) );
+    //   }
+    //
+    // }
 
 
 
@@ -233,6 +246,7 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
                     {
                       responsePhi[iCounter].Fill( PhiHErec, (PhiHEgen2+TMath::Pi()) );
                       PhiGenBinsH[iCounter]->Fill( (PhiHEgen2+TMath::Pi()) );
+                      PhiRecBinsH[iCounter]->Fill( (PhiHErec) );
                     // } else {
                     //   responsePhi[iCounter].Miss((PhiHEgen2+TMath::Pi()));
                     }
@@ -359,6 +373,10 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     unfold1[iC] = RooUnfoldBayes(&responsePhi[iC], histo[iC], 4);
     unfold2[iC] = RooUnfoldBayes(&responsePhi[iC], histo[iC], 10);
     unfold3[iC] = RooUnfoldBayes(&responsePhi[iC], histo[iC], 20);
+    // unfold[iC]  = RooUnfoldBayes(&responsePhi[iC], PhiRecBinsH[iC], Iterations);
+    // unfold1[iC] = RooUnfoldBayes(&responsePhi[iC], PhiRecBinsH[iC], 4);
+    // unfold2[iC] = RooUnfoldBayes(&responsePhi[iC], PhiRecBinsH[iC], 10);
+    // unfold3[iC] = RooUnfoldBayes(&responsePhi[iC], PhiRecBinsH[iC], 20);
   }
 
 
@@ -385,6 +403,10 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
   TH1D* unfolded2[24];
   TH1D* unfolded3[24];
   for (Int_t iC = 4; iC < 20; iC++) {
+    // unfolded[iC]  = (TH1D*) unfold[iC].Hreco(RooUnfold::kCovariance);
+    // unfolded1[iC] = (TH1D*) unfold1[iC].Hreco(RooUnfold::kCovariance);
+    // unfolded2[iC] = (TH1D*) unfold2[iC].Hreco(RooUnfold::kCovariance);
+    // unfolded3[iC] = (TH1D*) unfold3[iC].Hreco(RooUnfold::kCovariance);
     unfolded[iC]  = (TH1D*) unfold[iC].Hreco();
     unfolded1[iC] = (TH1D*) unfold1[iC].Hreco();
     unfolded2[iC] = (TH1D*) unfold2[iC].Hreco();
@@ -564,6 +586,12 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
 
 
 
+    TLatex* latex = new TLatex();
+    latex->SetTextSize(0.055);
+    latex->SetTextFont(42);
+    latex->SetTextAlign(11);
+    latex->SetNDC();
+    latex->DrawLatex(0.12,0.94,"This thesis");
 
 
 
@@ -580,6 +608,15 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
 
     unfolded[iC]->SetLineColor(kRed);
     unfolded[iC]->SetTitle("Generated MC vs unfolded reconstructed MC");
+    // TLatex* latex = new TLatex();
+    // latex->SetTextSize(0.055);
+    // latex->SetTextFont(42);
+    // latex->SetTextAlign(11);
+    // latex->SetNDC();
+    // latex->DrawLatex(0.12,0.94,"This thesis");
+    // latex->SetTextSize(0.055);
+    // latex->DrawLatex(0.7,0.94,"Helicity");
+
     unfolded[iC]->GetXaxis()->SetTitleOffset(1.15);
     unfolded[iC]->GetYaxis()->SetTitleOffset(1.25);
     unfolded[iC]->GetXaxis()->SetTitleSize(0.045);
@@ -593,7 +630,7 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
 
     unfolded[iC]->GetXaxis()->SetTitle("#varphi");
     unfolded[iC]->GetYaxis()->SetTitle("Unfolded MC");
-    unfolded[iC]->GetYaxis()->SetRangeUser(unfolded[iC]->GetMinimum()*0.7, unfolded[iC]->GetMaximum()*1.5);
+    unfolded[iC]->GetYaxis()->SetRangeUser(unfolded[iC]->GetMinimum()*0.9, unfolded[iC]->GetMaximum()*1.3);
     // unfolded[iC]->SetLineWidth(5);
 
     unfolded1[iC]->SetLineColor(kBlue);
@@ -606,7 +643,13 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     PhiGenBinsH[iC]->SetLineColor(kBlack);
     PhiGenBinsH[iC]->SetLineWidth(4);
     PhiGenBinsH[iC]->Draw("same");
-    leg_pt[iC] = new TLegend(0.5,0.45,0.85,0.79);
+    // TLatex* latex = new TLatex();
+    // latex->SetTextSize(0.055);
+    // latex->SetTextFont(42);
+    // latex->SetTextAlign(11);
+    // latex->SetNDC();
+    latex->DrawLatex(0.2,0.74,"This thesis");
+    leg_pt[iC] = new TLegend(0.5,0.65,0.85,0.79);
     leg_pt[iC]->SetFillStyle(0);
     leg_pt[iC]->SetBorderSize(0);
     leg_pt[iC]->SetTextSize(0.042);
@@ -621,7 +664,8 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     }
 
 
-
+    TH1F* histo6 = new TH1F("histo6", "histo6", 1000, -0.5, 999.5);
+    Double_t Counter = 1;
     TLegend *leg_pt2[24];
     for (Int_t iC = 4; iC < 20; iC++) {
     new TCanvas;
@@ -635,7 +679,7 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     refolded[iC]->SetLineColor(kRed);
     refolded[iC]->SetTitle("Ratio of refolded MC to reconstructed MC");
     refolded[iC]->GetXaxis()->SetTitleOffset(1.15);
-    refolded[iC]->GetYaxis()->SetTitleOffset(1.25);
+    refolded[iC]->GetYaxis()->SetTitleOffset(1.35);
     refolded[iC]->GetXaxis()->SetTitleSize(0.045);
     refolded[iC]->GetYaxis()->SetTitleSize(0.045);
     refolded[iC]->GetXaxis()->SetLabelSize(0.045);
@@ -647,7 +691,7 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
 
     refolded[iC]->GetXaxis()->SetTitle("#varphi");
     refolded[iC]->GetYaxis()->SetTitle("Refolded ratio to reconstructed MC");
-    refolded[iC]->GetYaxis()->SetRangeUser(0.95, 1.05);
+    refolded[iC]->GetYaxis()->SetRangeUser(0.975, 1.025);
     // unfolded[iC]->SetLineWidth(5);
 
     refolded1[iC]->SetLineColor(kBlue);
@@ -661,8 +705,15 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     refolded1[iC]->Draw("same");
     refolded2[iC]->Draw("same");
     refolded3[iC]->Draw("same");
+    // TLatex* latex = new TLatex();
+    // latex->SetTextSize(0.055);
+    // latex->SetTextFont(42);
+    // latex->SetTextAlign(11);
+    // latex->SetNDC();
+    latex->DrawLatex(0.2,0.74,"This thesis");
 
-    leg_pt2[iC] = new TLegend(0.5,0.45,0.85,0.79);
+
+    leg_pt2[iC] = new TLegend(0.5,0.65,0.85,0.79);
     leg_pt2[iC]->SetFillStyle(0);
     leg_pt2[iC]->SetBorderSize(0);
     leg_pt2[iC]->SetTextSize(0.042);
@@ -672,7 +723,12 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     leg_pt2[iC]->AddEntry(refolded3[iC],"20 iteration", "LP");
     leg_pt2[iC]->Draw();
     gPad->SaveAs(Form("Unfolding2D/closureplots/refolded_%d.pdf", iC), "recreate");
-
+    for (Int_t j = 1; j < 30; j++) {
+      if(refolded[iC]->GetBinContent(j) > 0.000000001){
+        histo6->SetBinContent(Counter, (refolded[iC]->GetBinContent(j)-1.)*(refolded[iC]->GetBinContent(j)-1.)*(histo[iC]->GetBinContent(j)));
+        Counter++;
+      }
+    }
 
     }
 
@@ -718,20 +774,143 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
 
 
 
+    TH1F* histo5 = new TH1F("histo5", "histo5", 1000, -0.5, 999.5);
+
+    for (Int_t iC = 5; iC < 19; iC++) {
+      if( iC == 0  || iC == 1  || iC == 2  || iC == 3  ||
+          iC == 4  || iC == 23 || iC == 22 || iC == 21 ||
+          iC == 20 || iC == 19 )
+      {
+        M = 1;
+      } else if ( iC == 5  || iC == 6  || iC == 18  || iC == 17 ) {
+        M = 6;
+      } else if ( iC == 7  || iC == 8  || iC == 16  || iC == 15 ) {
+        M = 12;
+      } else if ( iC == 9  || iC == 10  || iC == 11  ||
+                  iC == 12 || iC == 13  || iC == 14 ) {
+        M = 24;
+      }
+      for (Int_t j = 0; j < M; j++) {
+        histo5->SetBinContent( iC*30+j, refolded[iC]->GetBinContent( j+1 ) );
+        histo5->SetBinError(   iC*30+j, refolded[iC]->GetBinError( j+1 ) );
+        // histogram->SetBinError(   iC*30+j, h3[iC]->GetBinError( j+1 ) );
+      }
+
+    }
+
+
+
+    // TMatrixD CovarianceUncert[24];
+    // for (Int_t iC = 4; iC < 20; iC++) {
+    //   CovarianceUncert[iC] = unfold[iC].Ereco(RooUnfold::kCovariance);
+    // }
+    // std::vector<TMatrixD> CovarianceUncert;
+    // for (Int_t iC = 4; iC < 20; iC++) {
+    //   CovarianceUncert.push_back(unfold[iC].Ereco(RooUnfold::kCovariance));
+    // }
+    //
+    // TMatrixD Covariance4(1,1)    = unfold[4].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance5(6,6)    = unfold[5].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance6(6,6)    = unfold[6].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance7(12,12)  = unfold[7].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance8(12,12)  = unfold[8].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance9(24,24)  = unfold[9].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance10(24,24) = unfold[10].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance11(24,24) = unfold[11].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance12(24,24) = unfold[12].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance13(24,24) = unfold[13].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance14(24,24) = unfold[14].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance15(12,12) = unfold[15].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance16(12,12) = unfold[16].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance17(6,6)   = unfold[17].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance18(6,6)   = unfold[18].Ereco(RooUnfold::kCovariance);
+    // TMatrixD Covariance19(1,1)   = unfold[19].Ereco(RooUnfold::kCovariance);
+    TMatrixD Covariance4(1,1);
+    TMatrixD Covariance5(6,6);
+    TMatrixD Covariance6(6,6);
+    TMatrixD Covariance7(12,12) ;
+    TMatrixD Covariance8(12,12);
+    TMatrixD Covariance9(24,24) ;
+    TMatrixD Covariance10(24,24) ;
+    TMatrixD Covariance11(24,24);
+    TMatrixD Covariance12(24,24);
+    TMatrixD Covariance13(24,24);
+    TMatrixD Covariance14(24,24);
+    TMatrixD Covariance15(12,12);
+    TMatrixD Covariance16(12,12);
+    TMatrixD Covariance17(6,6);
+    TMatrixD Covariance18(6,6);
+    TMatrixD Covariance19(1,1);
+     // Covariance4    = unfold[4].Ereco(RooUnfold::kCovariance);
+     // Covariance5    = unfold[5].Ereco(RooUnfold::kCovariance);
+     // Covariance6    = unfold[6].Ereco(RooUnfold::kCovariance);
+     // Covariance7  = unfold[7].Ereco(RooUnfold::kCovariance);
+     // Covariance8 = unfold[8].Ereco(RooUnfold::kCovariance);
+     // Covariance9  = unfold[9].Ereco(RooUnfold::kCovariance);
+     // Covariance10 = unfold[10].Ereco(RooUnfold::kCovariance);
+     // Covariance11 = unfold[11].Ereco(RooUnfold::kCovariance);
+     // Covariance12 = unfold[12].Ereco(RooUnfold::kCovariance);
+     // Covariance13 = unfold[13].Ereco(RooUnfold::kCovariance);
+     // Covariance14= unfold[14].Ereco(RooUnfold::kCovariance);
+     // Covariance15 = unfold[15].Ereco(RooUnfold::kCovariance);
+     // Covariance16 = unfold[16].Ereco(RooUnfold::kCovariance);
+     // Covariance17   = unfold[17].Ereco(RooUnfold::kCovariance);
+     // Covariance18   = unfold[18].Ereco(RooUnfold::kCovariance);
+     // Covariance19   = unfold[19].Ereco(RooUnfold::kCovariance);
+     Covariance4    = unfold[4].Ereco(RooUnfold::kCovToy);
+     Covariance5    = unfold[5].Ereco(RooUnfold::kCovToy);
+     Covariance6    = unfold[6].Ereco(RooUnfold::kCovToy);
+     Covariance7  = unfold[7].Ereco(RooUnfold::kCovToy);
+     Covariance8 = unfold[8].Ereco(RooUnfold::kCovToy);
+     Covariance9  = unfold[9].Ereco(RooUnfold::kCovToy);
+     Covariance10 = unfold[10].Ereco(RooUnfold::kCovToy);
+     Covariance11 = unfold[11].Ereco(RooUnfold::kCovToy);
+     Covariance12 = unfold[12].Ereco(RooUnfold::kCovToy);
+     Covariance13 = unfold[13].Ereco(RooUnfold::kCovToy);
+     Covariance14= unfold[14].Ereco(RooUnfold::kCovToy);
+     Covariance15 = unfold[15].Ereco(RooUnfold::kCovToy);
+     Covariance16 = unfold[16].Ereco(RooUnfold::kCovToy);
+     Covariance17   = unfold[17].Ereco(RooUnfold::kCovToy);
+     Covariance18   = unfold[18].Ereco(RooUnfold::kCovToy);
+     Covariance19   = unfold[19].Ereco(RooUnfold::kCovToy);
+
     TFile *SavingFile[24];
     for (Int_t iC = 4; iC < 20; iC++) {
       SavingFile[iC]  = new TFile(Form("Unfolding2D/UnfoldedClosureHe_%d.root", iC), "RECREATE");
       PhiRecH   ->Write();
       PhiGenH   ->Write();
+      CosThetaGenH   ->Write();
+      PhiGenBinsH[iC]->Write();
+      PhiRecBinsH[iC]->Write();
       responsePhi[iC].Write();
+      unfold[iC].Write();
       unfolded[iC] ->Write();
       unfolded1[iC]->Write();
       unfolded2[iC]->Write();
       unfolded3[iC]->Write();
+      Covariance4.Write();
+      Covariance5.Write();
+      Covariance6.Write();
+      Covariance7.Write();
+      Covariance8.Write();
+      Covariance9.Write();
+      Covariance10.Write();
+      Covariance11.Write();
+      Covariance12.Write();
+      Covariance13.Write();
+      Covariance14.Write();
+      Covariance15.Write();
+      Covariance16.Write();
+      Covariance17.Write();
+      Covariance18.Write();
+      Covariance19.Write();
       histo[iC]->Write();
       histo2[iC]->Write();
       histo3[iC]->Write();
       histo4[iC]->Write();
+      histo5->Write();
+      histo6->Write();
+      // CovarianceUncert[iC].Write();
       PhiGenBinsH[iC]->Write();
       // unfoldedSimple->Write();
       // unfoldedSimple1->Write();
@@ -740,6 +919,18 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
       SavingFile[iC]->Close();
     }
 
+
+
+    // Double_t Determinants[24];
+    // // TMatrixD ValuesResponseMatrix[24];
+    // cout << "========================================" << endl;
+    // for (Int_t iC = 4; iC < 20; iC++) {
+    //   Determinants[iC] = (responsePhi[iC].Mresponse()).Determinant();
+    //   // ValuesResponseMatrix[iC] = (TMatrixD) responsePhi[iC].Mresponse();
+    //   // ValuesResponseMatrix[iC].InvertFast(&Determinants[iC]);
+    //   cout << "Determinants[" << iC << "] = " << Determinants[iC] << endl;
+    //
+    // }
 
 
 }

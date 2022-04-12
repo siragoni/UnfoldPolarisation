@@ -41,6 +41,7 @@ void DrawResolutions()
 
 
   // TFile* file = new TFile("MCtrainResults/2019-09-17/kIncohJpsiToMu/AnalysisResults.root");
+  // TFile* file = new TFile("SavingFile.root");
   TFile* file = new TFile("SavingFileData.root");
   // TDirectory* dir;
   // dir = file->GetDirectory("MyTask");
@@ -87,6 +88,7 @@ void DrawResolutions()
   latex5->SetTextAlign(11);
   latex5->SetNDC();
   latex5->DrawLatex(0.31,0.94,"ALICE LHC18l7, PbPb #sqrt{s_{NN}} = 5.02 TeV");
+  latex5->DrawLatex(0.31,0.74,"This thesis");
 
   gPad->SaveAs("costhetaresolution.pdf", "recreate");
 
@@ -146,9 +148,88 @@ void DrawResolutions()
   latex55->SetTextAlign(11);
   latex55->SetNDC();
   latex55->DrawLatex(0.31,0.94,"ALICE LHC18l7, PbPb #sqrt{s_{NN}} = 5.02 TeV");
+  latex55->DrawLatex(0.31,0.74,"This thesis");
 
   gPad->SaveAs("phiresolution.pdf", "recreate");
 
+
+  TFile* fileforroman = new TFile("resolutionroman.root", "recreate");
+  UnlikeSignDimuonMC->Write();
+  UnlikeSignDimuon->Write();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  new TCanvas;
+  gPad->SetMargin(0.13,0.10,0.12,0.10);
+  // gPad->SetLeftMargin(0.2);
+  // // gPad->SetLeftMargin(0.12);
+  // // gPad->SetRightMargin(0.1);
+  // gPad->SetRightMargin(0.01);
+  // gPad->SetBottomMargin(0.1);
+  // gPad->SetLogy();
+  gPad->SetTickx(1);
+  gPad->SetTicky(1);
+  gPad->SetGridx();
+  gPad->SetGridy();
+  gStyle->SetOptStat(0);
+
+  TH1F* UnlikeSignDimuona    = (TH1F*)file->Get("CosThetaRecH");
+  TH1F* UnlikeSignDimuonMCa  = (TH1F*)file->Get("CosThetaGenH");
+  // UnlikeSignDimuon->Rebin(5);
+  // UnlikeSignDimuonMC->Rebin(5);
+  // UnlikeSignDimuon->Divide(UnlikeSignDimuonMC);
+  UnlikeSignDimuona->SetTitle("");
+  // UnlikeSignDimuon->Rebin(5);
+  // UnlikeSignDimuon->Rebin(2);
+  UnlikeSignDimuona->GetXaxis()->SetTitleOffset(1.15);
+  // UnlikeSignDimuon->GetYaxis()->SetTitleOffset(1.25);
+  UnlikeSignDimuona->GetYaxis()->SetTitleOffset(1.25);
+  UnlikeSignDimuona->GetXaxis()->SetTitleSize(0.045);
+  UnlikeSignDimuona->GetYaxis()->SetTitleSize(0.045);
+  UnlikeSignDimuona->GetXaxis()->SetLabelSize(0.045);
+  UnlikeSignDimuona->GetYaxis()->SetLabelSize(0.045);
+  UnlikeSignDimuona->GetXaxis()->SetTitleFont(42);
+  UnlikeSignDimuona->GetYaxis()->SetTitleFont(42);
+  UnlikeSignDimuona->GetXaxis()->SetLabelFont(42);
+  UnlikeSignDimuona->GetYaxis()->SetLabelFont(42);
+
+  UnlikeSignDimuona->GetXaxis()->SetTitle("cos#theta_{rec}");
+  UnlikeSignDimuona->GetYaxis()->SetTitle("Counts [a.u.]");
+  UnlikeSignDimuona->GetYaxis()->SetRangeUser(0.,450000);
+  UnlikeSignDimuona->GetXaxis()->SetRangeUser(-0.7 , 0.7);
+  UnlikeSignDimuona->SetLineWidth(5);
+  UnlikeSignDimuona->SetLineColor(2);
+  // UnlikeSignDimuon->SetFillColor(kRed-3);
+  // UnlikeSignDimuon->SetFillStyle(1001);
+  // UnlikeSignDimuon->Draw("ep");
+  UnlikeSignDimuona->Draw("");
+
+
+
+
+  TLatex* latex555 = new TLatex();
+  latex555->SetTextSize(0.045);
+  latex555->SetTextFont(42);
+  latex555->SetTextAlign(11);
+  latex555->SetNDC();
+  latex555->DrawLatex(0.31,0.94,"ALICE LHC18l7, PbPb #sqrt{s_{NN}} = 5.02 TeV");
+  latex555->DrawLatex(0.31,0.74,"This thesis");
+
+  gPad->SaveAs("costhetareconstructed.pdf", "recreate");
 
 
 }

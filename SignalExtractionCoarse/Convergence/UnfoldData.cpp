@@ -92,7 +92,7 @@ Double_t calcChi2v2(TH1* h1, TH1* h2, Int_t nbins) {
     return chi2;
 }
 //_____________________________________________________________________________
-void UnfoldData(){
+void UnfoldData(Int_t Iterations = 15){
 
   // ===================
   // Retrieve REAL data
@@ -130,8 +130,15 @@ void UnfoldData(){
   // -------------------
   RooUnfoldBayes unfold[24];
   TH1D* hunfold[24];
+  TH1D* refolded[24];
   TH1D* relativeuncertainties[24];
-  Int_t N = 15;
+  Int_t N = Iterations;
+  Int_t Counter = 1;
+  Double_t ChiSquareTestRefRec  = 0;
+  Double_t ChiSquareTestRefRec2 = 0;
+  TH1F* refoldedrecoH = new TH1F("refoldedrecoH","refoldedrecoH", 300, -0.5, 299.5);
+  TH1F* refoldedrecoresidualH = new TH1F("refoldedrecoresidualH","refoldedrecoresidualH", 20, -50, 50 );
+  TH1F* refoldedrecopullH = new TH1F("refoldedrecopullH","refoldedrecopullH", 80, -2, 2 );
   // -------------------
   // How many iterations?
   // From the analysis
@@ -145,6 +152,16 @@ void UnfoldData(){
     for (Int_t j = 1; j < M+1; j++) {
       relativeuncertainties[i]->SetBinContent(j, hunfold[i]->GetBinError(j)/hunfold[i]->GetBinContent(j));
     }
+    refolded[i] = (TH1D*) h[i]->ApplyToTruth(hunfold[i]);
+    for (Int_t j = 1; j < M+1; j++) {
+      refoldedrecoH->SetBinContent(Counter, (refolded[i]->GetBinContent(j) - hdata_formatted[i]->GetBinContent(j))/hdata_formatted[i]->GetBinContent(j) );
+      Counter++;
+      refolded[i]->SetBinError(j, hunfold[i]->GetBinError(j)*refolded[i]->GetBinContent(j)/hunfold[i]->GetBinContent(j));
+      refoldedrecoresidualH->Fill((refolded[i]->GetBinContent(j) - hdata_formatted[i]->GetBinContent(j)) );
+      refoldedrecopullH->Fill((refolded[i]->GetBinContent(j) - hdata_formatted[i]->GetBinContent(j))/hdata_formatted[i]->GetBinContent(j) );
+    }
+    ChiSquareTestRefRec  += calcChi2v2(hdata_formatted[i], refolded[i], 6);
+    ChiSquareTestRefRec2 += calcChi2(refolded[i],hdata_formatted[i],    6);
   }
 
 
@@ -210,5 +227,97 @@ void UnfoldData(){
 
 
 
+
+
+
+    // -------------------
+    // Draw refolded
+    // reco ratio
+    // distribution
+    // -------------------
+    new TCanvas;
+    BeautifyPad();
+    BeautifyHisto(refoldedrecoH);
+    refoldedrecoH->GetXaxis()->SetTitle("Bin number");
+    // refoldedrecoH->GetYaxis()->SetTitle(Form("Relative uncertainties [a.u.]", relativeuncertainties[i]->GetXaxis()->GetBinWidth(1)));
+    refoldedrecoH->GetYaxis()->SetTitle("(Refolded - REC)/REC [%]");
+    refoldedrecoH->GetYaxis()->SetRangeUser(-1,1);
+    // refoldedrecoH->GetYaxis()->SetRangeUser(-1.e-15,1.e-15);
+    refoldedrecoH->GetXaxis()->SetRangeUser(-0.5, 85.5);
+    refoldedrecoH->Draw();
+    latex5->DrawLatex(0.31,0.94,"Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
+    if (Iterations == 1){latex5->DrawLatex(0.31,0.78,"1 iteration");}
+    else {latex5->DrawLatex(0.31,0.62,Form("%d iterations", Iterations));}
+    latex5->DrawLatex(0.2,0.80,Form("#chi^{2}_{1} = #sum (Refolded - REC)^{2}/REC = %0.02f",            ChiSquareTestRefRec));
+    latex5->DrawLatex(0.2,0.70,Form("#chi^{2}_{2} = #sum (Refolded - REC)^{2}/#DeltaRefolded = %0.02f", ChiSquareTestRefRec2));
+    gPad->SaveAs(Form("SignalExtractionCoarse/Convergence/refolded-iterations=%d.pdf", Iterations), "recreate");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // -------------------
+    // Draw pull
+    // closure
+    // distribution
+    // -------------------
+    new TCanvas;
+    BeautifyPad();
+    BeautifyHisto(refoldedrecopullH);
+    refoldedrecopullH->GetXaxis()->SetTitle("Pulls");
+    // refoldedrecopullH->Rebin(8);
+    refoldedrecopullH->GetYaxis()->SetTitle("Counts [a.u.]");
+    // refoldedrecopullH->GetYaxis()->SetRangeUser(-1.e-15,1.e-15);
+    // refoldedrecopullH->GetXaxis()->SetRangeUser(-50, 50);
+    refoldedrecopullH->Draw();
+    latex5->DrawLatex(0.31,0.94,"Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
+    if (Iterations == 1){latex5->DrawLatex(0.31,0.78,"1 iteration");}
+    else {latex5->DrawLatex(0.31,0.62,Form("%d iterations", Iterations));}
+    latex5->DrawLatex(0.2,0.80,"Pulls = #frac{Refolded - REC}{#DeltaRefolded}");
+    TF1* fitfunc2 = new TF1("fitfunc2", "gaus");
+    refoldedrecopullH->Fit(fitfunc2);
+    latex5->DrawLatex(0.2,0.74,Form("#mu = %0.3f #pm %0.3f", fitfunc2->GetParameter(1), fitfunc2->GetParError(1) ));
+    latex5->DrawLatex(0.2,0.68,Form("#sigma = %0.3f #pm %0.3f", fitfunc2->GetParameter(2), fitfunc2->GetParError(2) ));
+    gPad->SaveAs(Form("SignalExtractionCoarse/Convergence/pulls-iterations=%d.pdf", Iterations), "recreate");
+
+
+
+
+
+    // -------------------
+    // Draw residual
+    // closure
+    // distribution
+    // -------------------
+    new TCanvas;
+    BeautifyPad();
+    BeautifyHisto(refoldedrecoresidualH);
+    // refoldedrecoresidualH->Rebin(4);
+    refoldedrecoresidualH->GetXaxis()->SetTitle("Residuals");
+    refoldedrecoresidualH->GetYaxis()->SetTitle("Counts [a.u.]");
+    // refoldedrecoresidualH->GetXaxis()->SetRangeUser(-50000, 50000);
+    refoldedrecoresidualH->Draw();
+    latex5->DrawLatex(0.31,0.94,"Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
+    if (Iterations == 1){latex5->DrawLatex(0.31,0.78,"1 iteration");}
+    else {latex5->DrawLatex(0.31,0.62,Form("%d iterations", Iterations));}
+    latex5->DrawLatex(0.2,0.80,"Residuals = Refolded - REC");
+    TF1* fitfunc3 = new TF1("fitfunc3", "gaus");
+    refoldedrecoresidualH->Fit(fitfunc3);
+    latex5->DrawLatex(0.2,0.74,Form("#mu = %0.3f #pm %0.3f", fitfunc3->GetParameter(1), fitfunc3->GetParError(1) ));
+    latex5->DrawLatex(0.2,0.68,Form("#sigma = %0.3f #pm %0.3f", fitfunc3->GetParameter(2), fitfunc3->GetParError(2) ));
+    gPad->SaveAs(Form("SignalExtractionCoarse/Convergence/residuals-iterations=%d.pdf", Iterations), "recreate");
 
 }

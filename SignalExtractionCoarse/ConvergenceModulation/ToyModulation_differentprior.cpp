@@ -99,11 +99,11 @@ void ToyModulation(Int_t Stripe = 14){
   // -------------------
   TFile* fData[24];
   TH1F* hdata[24];
-  // TH1F* htruth[24];
+  TH1F* htruth[24];
   for (Int_t i = 5; i < 20; i++) {
     fData[i]  = new TFile(Form("SignalExtractionCoarse/ModulationYields/MonteCarloYieldsHe_phimodulation_%d.root", i));
     hdata[i]  = (TH1F*)fData[i]->Get(Form("h_%d",  i));
-    // htruth[i] = (TH1F*)fData[i]->Get(Form("hg_%d", i));
+    htruth[i] = (TH1F*)fData[i]->Get(Form("hg_%d", i));
   }
   // ===================
   // Retrieve the response
@@ -131,12 +131,12 @@ void ToyModulation(Int_t Stripe = 14){
   //   M = 24;
   // }
   TH1F* hdata_formatted  = new TH1F("hdata_formatted", "hdata_formatted",  M, 0, 2.*TMath::Pi());
-  // TH1F* htruth_formatted = new TH1F("htruth_formatted","htruth_formatted", M, 0, 2.*TMath::Pi());
+  TH1F* htruth_formatted = new TH1F("htruth_formatted","htruth_formatted", M, 0, 2.*TMath::Pi());
   for (Int_t i = 1; i < M+1; i++) {
     hdata_formatted ->SetBinContent(i, hdata[Stripe] ->GetBinContent(i));
     hdata_formatted ->SetBinError(  i, hdata[Stripe] ->GetBinError(i));
-    // htruth_formatted->SetBinContent(i, htruth[Stripe]->GetBinContent(i));
-    // htruth_formatted->SetBinError(  i, htruth[Stripe]->GetBinError(i));
+    htruth_formatted->SetBinContent(i, htruth[Stripe]->GetBinContent(i));
+    htruth_formatted->SetBinError(  i, htruth[Stripe]->GetBinError(i));
   }
 
   // ===================
@@ -144,59 +144,59 @@ void ToyModulation(Int_t Stripe = 14){
   // -------------------
   RooUnfoldBayes unfold[400];
   TH1D* hunfold[400];
-  // Double_t chi2_errorsfromunfold[100];
-  // Double_t chi2_errorsfromgen[100];
-  // TH1F* chiUnfoldH  = new TH1F("chiUnfoldH", "chiUnfoldH",  2000, -0.5, 1999.5 );
-  // TH1F* chiGenH     = new TH1F("chiGenH",    "chiGenH",     2000, -0.5, 1999.5 );
+  Double_t chi2_errorsfromunfold[1000];
+  Double_t chi2_errorsfromgen[1000];
+  TH1F* chiUnfoldH  = new TH1F("chiUnfoldH", "chiUnfoldH",  2000, -0.5, 1999.5 );
+  TH1F* chiGenH     = new TH1F("chiGenH",    "chiGenH",     2000, -0.5, 1999.5 );
   for (Int_t i = 1; i < 401; i++) {
     cout << "i = " << i << endl;
     unfold[i-1]                = RooUnfoldBayes(h[Stripe], hdata_formatted, i*5);
     hunfold[i-1]               = (TH1D*) unfold[i-1].Hreco();
-    // chi2_errorsfromunfold[i-1] = calcChi2  (hunfold[i-1], htruth_formatted, M);
-    // chi2_errorsfromgen[i-1]    = calcChi2v2(hunfold[i-1], htruth_formatted, M);
+    chi2_errorsfromunfold[i-1] = calcChi2  (hunfold[i-1], htruth_formatted, M);
+    chi2_errorsfromgen[i-1]    = calcChi2v2(hunfold[i-1], htruth_formatted, M);
     // ===================
     // Filling Chi2 plots
     // -------------------
-    // chiUnfoldH->SetBinContent( i*20, chi2_errorsfromunfold[i-1]/220. );
-    // chiUnfoldH->SetBinError(   i*20, 0. );
-    // chiGenH   ->SetBinContent( i*20, chi2_errorsfromgen[i-1]/220. );
-    // chiGenH   ->SetBinError(   i*20, 0. );
+    chiUnfoldH->SetBinContent( i*5, chi2_errorsfromunfold[i-1]/80. );
+    chiUnfoldH->SetBinError(   i*5, 0. );
+    chiGenH   ->SetBinContent( i*5, chi2_errorsfromgen[i-1]/80. );
+    chiGenH   ->SetBinError(   i*5, 0. );
   }
 
 
 
 
-  // new TCanvas;
-  // BeautifyPad();
-  // BeautifyHisto(chiUnfoldH);
-  // gPad->SetLogy();
-  // chiUnfoldH->GetXaxis()->SetTitle("Iterations");
-  // chiUnfoldH->GetYaxis()->SetTitle("(Unfolded - GEN)/(#DeltaUnfolded NDF)  [a.u.]");
-  // chiUnfoldH->GetYaxis()->SetRangeUser(0.1,chiUnfoldH->GetMaximum()*(10.));
-  // chiUnfoldH->GetXaxis()->SetRangeUser(-0.5, 1999.5);
-  // chiUnfoldH->Draw();
+  new TCanvas;
+  BeautifyPad();
+  BeautifyHisto(chiUnfoldH);
+  gPad->SetLogy();
+  chiUnfoldH->GetXaxis()->SetTitle("Iterations");
+  chiUnfoldH->GetYaxis()->SetTitle("(Unfolded - GEN)/(#DeltaUnfolded NDF)  [a.u.]");
+  chiUnfoldH->GetYaxis()->SetRangeUser(0.1,chiUnfoldH->GetMaximum()*(10.));
+  chiUnfoldH->GetXaxis()->SetRangeUser(-0.5, 1999.5);
+  chiUnfoldH->Draw();
   TLatex* latex5 = new TLatex();
   latex5->SetTextSize(0.045);
   latex5->SetTextFont(42);
   latex5->SetTextAlign(11);
   latex5->SetNDC();
   latex5->DrawLatex(0.31,0.94,"Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
+  latex5->DrawLatex(0.31,0.74,"This thesis");
+  latex5->DrawLatex(0.31,0.74,Form("This thesis, Slice in cos#theta = %d", Stripe));
+  gPad->SaveAs(Form("SignalExtractionCoarse/ConvergenceModulation/chi2-unfold-errors-modulation-different-prior-%d.pdf", Stripe), "recreate");
+  new TCanvas;
+  BeautifyPad();
+  BeautifyHisto(chiGenH);
+  gPad->SetLogy();
+  chiGenH->GetXaxis()->SetTitle("Iterations");
+  chiGenH->GetYaxis()->SetTitle("(Unfolded - GEN)/(GEN NDF)  [a.u.]");
+  chiGenH->GetYaxis()->SetRangeUser(0.1,chiGenH->GetMaximum()*(10.));
+  chiGenH->GetXaxis()->SetRangeUser(-0.5, 1999.5);
+  chiGenH->Draw();
+  latex5->DrawLatex(0.31,0.94,"Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
   // latex5->DrawLatex(0.31,0.74,"This thesis");
-  // latex5->DrawLatex(0.31,0.74,Form("This thesis, Slice in cos#theta = %d", Stripe));
-  // gPad->SaveAs(Form("Unfolding2D/Convergence/chi2-unfold-errors-modulation-%d.pdf", Stripe), "recreate");
-  // new TCanvas;
-  // BeautifyPad();
-  // BeautifyHisto(chiGenH);
-  // gPad->SetLogy();
-  // chiGenH->GetXaxis()->SetTitle("Iterations");
-  // chiGenH->GetYaxis()->SetTitle("(Unfolded - GEN)/(GEN NDF)  [a.u.]");
-  // chiGenH->GetYaxis()->SetRangeUser(0.1,chiGenH->GetMaximum()*(10.));
-  // chiGenH->GetXaxis()->SetRangeUser(-0.5, 1999.5);
-  // chiGenH->Draw();
-  // latex5->DrawLatex(0.31,0.94,"Pb-Pb #sqrt{#it{s}_{NN}} = 5.02 TeV");
-  // // latex5->DrawLatex(0.31,0.74,"This thesis");
-  // latex5->DrawLatex(0.31,0.74,Form("This thesis, Slice in cos#theta = %d", Stripe));
-  // gPad->SaveAs(Form("Unfolding2D/Convergence/chi2-generated-errors-modulation-%d.pdf", Stripe), "recreate");
+  latex5->DrawLatex(0.31,0.74,Form("This thesis, Slice in cos#theta = %d", Stripe));
+  gPad->SaveAs(Form("SignalExtractionCoarse/ConvergenceModulation/chi2-generated-errors-modulation-different-prior-%d.pdf", Stripe), "recreate");
 
 
 

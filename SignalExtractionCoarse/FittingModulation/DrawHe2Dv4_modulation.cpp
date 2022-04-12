@@ -499,7 +499,7 @@ void PolarisationHeMinuit2D(Int_t FitRangeMode = 0, Int_t Iterations = 1, Int_t 
   latex->DrawLatex(0.6,0.79,Form("#lambda_{#varphi} = %0.3f #pm %0.3f", LambdaPhi,        LambdaPhiErr ));
   latex->DrawLatex(0.6,0.74,Form("#lambda_{#theta#varphi} = %0.3f #pm %0.3f", LambdaThetaPhi,   LambdaThetaPhiErr ));
   latex->DrawLatex(0.15,0.15,Form("#tilde{#chi^{2}} = %0.3f / %d = %0.3f ", GlobalChi,    ndf2, GlobalChi/((Double_t)ndf2) ));
-  gPad->SaveAs(Form("SignalExtractionCoarse/Fitting/2Dmaps-data-%d.pdf", Iterations), "recreate");
+  gPad->SaveAs(Form("SignalExtractionCoarse/FittingModulation/2Dmaps-data-%d.pdf", Iterations), "recreate");
 
 
   new TCanvas;

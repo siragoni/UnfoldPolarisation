@@ -278,7 +278,7 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
   TFile* fileDataRaw[24];
   TH1F *Data[24];
   for (Int_t iC = 4; iC < 20; iC++) {
-    fileDataRaw[iC] = new TFile(Form("SignalExtractionCoarse/RawYieldsHeV3_%d.root", iC));
+    fileDataRaw[iC] = new TFile(Form("SignalExtractionCoarse/RawYieldsHeV4_%d.root", iC));
     Data[iC]        = (TH1F*)fileDataRaw[iC]->Get(Form("h_%d", iC));
   }
 

@@ -220,6 +220,10 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
                     {
                       responsePhi[iCounter].Fill( PhiHErec, (PhiHEgen2+TMath::Pi()) );
                     }
+                    // if(  ( CosThetaHErec > (-1. + ((Double_t) iCounter)*(0.08+0.01/3.)) && CosThetaHErec < (-1. + (((Double_t) iCounter)+1.)*(0.08+0.01/3.) )) )
+                    // {
+                    //   responsePhi[iCounter].Fill( PhiHErec, (PhiHEgen2+TMath::Pi()) );
+                    // }
 
                   }
 
@@ -344,6 +348,10 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     unfolded1[iC] = (TH1D*) unfold1[iC].Hreco();
     unfolded2[iC] = (TH1D*) unfold2[iC].Hreco();
     unfolded3[iC] = (TH1D*) unfold3[iC].Hreco();
+    // unfolded[iC]  = (TH1D*) unfold[iC].Hreco(RooUnfold::kCovToy);
+    // unfolded1[iC] = (TH1D*) unfold1[iC].Hreco(RooUnfold::kCovToy);
+    // unfolded2[iC] = (TH1D*) unfold2[iC].Hreco(RooUnfold::kCovToy);
+    // unfolded3[iC] = (TH1D*) unfold3[iC].Hreco(RooUnfold::kCovToy);
   }
 
 
@@ -408,6 +416,147 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
 
 
 
+
+    TH1D* refolded[24];
+    TH1D* refolded1[24];
+    TH1D* refolded2[24];
+    TH1D* refolded3[24];
+    // TH1F* histo6 = new TH1F("histo6", "histo6", 1000, -0.5, 999.5);
+    // Double_t Counter = 1;
+    for (Int_t iC = 4; iC < 20; iC++) {
+      refolded[iC]  = (TH1D*) responsePhi[iC].ApplyToTruth(unfolded[iC]);
+      refolded1[iC] = (TH1D*) responsePhi[iC].ApplyToTruth(unfolded1[iC]);
+      refolded2[iC] = (TH1D*) responsePhi[iC].ApplyToTruth(unfolded2[iC]);
+      refolded3[iC] = (TH1D*) responsePhi[iC].ApplyToTruth(unfolded3[iC]);
+    }
+    TLatex* latex = new TLatex();
+    latex->SetTextSize(0.055);
+    latex->SetTextFont(42);
+    latex->SetTextAlign(11);
+    latex->SetNDC();
+    TLegend *leg_pt2[24];
+    TH1F* histo6 = new TH1F("histo6", "histo6", 1000, -0.5, 999.5);
+    Int_t Mnn = 1;
+    TH1F* histo9 = new TH1F("histo9", "histo9", 1000, -0.5, 999.5);
+    Int_t Counter  = 1;
+    Int_t Counter5 = 1;
+    for (Int_t iC = 4; iC < 20; iC++) {
+    new TCanvas;
+    gPad->SetMargin(0.13,0.10,0.12,0.10);
+    gPad->SetTickx(1);
+    gPad->SetTicky(1);
+    gPad->SetGridx();
+    gPad->SetGridy();
+    gStyle->SetOptStat(0);
+
+    refolded[iC]->SetLineColor(kRed);
+    refolded[iC]->SetTitle("Ratio of refolded DATA to reconstructed DATA");
+    refolded[iC]->GetXaxis()->SetTitleOffset(1.15);
+    refolded[iC]->GetYaxis()->SetTitleOffset(1.35);
+    refolded[iC]->GetXaxis()->SetTitleSize(0.045);
+    refolded[iC]->GetYaxis()->SetTitleSize(0.045);
+    refolded[iC]->GetXaxis()->SetLabelSize(0.045);
+    refolded[iC]->GetYaxis()->SetLabelSize(0.045);
+    refolded[iC]->GetXaxis()->SetTitleFont(42);
+    refolded[iC]->GetYaxis()->SetTitleFont(42);
+    refolded[iC]->GetXaxis()->SetLabelFont(42);
+    refolded[iC]->GetYaxis()->SetLabelFont(42);
+
+    refolded[iC]->GetXaxis()->SetTitle("#varphi");
+    refolded[iC]->GetYaxis()->SetTitle("Refolded ratio to reconstructed MC");
+    refolded[iC]->GetYaxis()->SetRangeUser(0.9, 1.1);
+    // unfolded[iC]->SetLineWidth(5);
+    for (Int_t j = 1; j < 30; j++) {
+      if(refolded[iC]->GetBinContent(j) > 0.000000001){
+        Double_t avalue = refolded[iC]->GetBinContent(j);
+        Double_t bvalue = histo[iC]   ->GetBinContent(j);
+        Double_t cvalue = unfolded[iC]->GetBinContent(j);
+        Double_t aerror = refolded[iC]->GetBinError(j);
+        Double_t berror = histo[iC]   ->GetBinError(j);
+        Double_t cerror = unfolded[iC]->GetBinError(j);
+        cout << "====================" << j << endl;
+        cout << "avalue = " << avalue << endl;
+        cout << "bvalue = " << bvalue << endl;
+        cout << "cvalue = " << cvalue << endl;
+        cout << "aerror = " << aerror << endl;
+        cout << "berror = " << berror << endl;
+        cout << "cerror = " << cerror << endl;
+        // if (aerror == 0){
+        // if (aerror == 0 || (aerror < (cerror * avalue/cvalue))){
+          // if (berror == 0) cout << "PROBLEM2" << endl;
+          // if (cerror == 0) cout << "PROBLEM3" << endl;
+          aerror = cerror * avalue/cvalue;
+        // }
+        // histo9->SetBinContent(Counter5, (refolded[iC]->GetBinContent(j) - histo[iC]->GetBinContent(j))*(refolded[iC]->GetBinContent(j)-histo[iC]->GetBinContent(j))/(refolded[iC]->GetBinError(j)));
+        histo9->SetBinContent(Counter5, (avalue - bvalue)*(avalue - bvalue)/(aerror));
+        Counter5++;
+        cout << "AAAAAA    " << j << endl;
+      }
+    }
+    refolded1[iC]->SetLineColor(kBlue);
+    refolded2[iC]->SetLineColor(kYellow);
+    refolded3[iC]->SetLineColor(kGreen);
+    refolded[iC]->Divide(histo[iC]);
+    refolded1[iC]->Divide(histo[iC]);
+    refolded2[iC]->Divide(histo[iC]);
+    refolded3[iC]->Divide(histo[iC]);
+    refolded[iC]->Draw();
+    refolded1[iC]->Draw("same");
+    refolded2[iC]->Draw("same");
+    refolded3[iC]->Draw("same");
+    // TLatex* latex = new TLatex();
+    // latex->SetTextSize(0.055);
+    // latex->SetTextFont(42);
+    // latex->SetTextAlign(11);
+    // latex->SetNDC();
+    latex->DrawLatex(0.2,0.74,"This thesis");
+
+
+    leg_pt2[iC] = new TLegend(0.5,0.65,0.85,0.79);
+    leg_pt2[iC]->SetFillStyle(0);
+    leg_pt2[iC]->SetBorderSize(0);
+    leg_pt2[iC]->SetTextSize(0.042);
+    leg_pt2[iC]->AddEntry(refolded[iC],"1 iteration", "LP");
+    leg_pt2[iC]->AddEntry(refolded1[iC],"4 iteration", "LP");
+    leg_pt2[iC]->AddEntry(refolded2[iC],"10 iteration", "LP");
+    leg_pt2[iC]->AddEntry(refolded3[iC],"20 iteration", "LP");
+    leg_pt2[iC]->Draw();
+    gPad->SaveAs(Form("Unfolding2D/closureplots/refolded_data_HE_%d.pdf", iC), "recreate");
+    for (Int_t j = 1; j < 30; j++) {
+      if(refolded[iC]->GetBinContent(j) > 0.000000001){
+        histo6->SetBinContent(Counter, (refolded[iC]->GetBinContent(j)-1.)*(refolded[iC]->GetBinContent(j)-1.)*(histo[iC]->GetBinContent(j)));
+        Counter++;
+      }
+    }
+
+
+    }
+
+    TH1F* histo5 = new TH1F("histo5", "histo5", 1000, -0.5, 999.5);
+
+    for (Int_t iC = 5; iC < 19; iC++) {
+      if( iC == 0  || iC == 1  || iC == 2  || iC == 3  ||
+          iC == 4  || iC == 23 || iC == 22 || iC == 21 ||
+          iC == 20 || iC == 19 )
+      {
+        M = 1;
+      } else if ( iC == 5  || iC == 6  || iC == 18  || iC == 17 ) {
+        M = 6;
+      } else if ( iC == 7  || iC == 8  || iC == 16  || iC == 15 ) {
+        M = 12;
+      } else if ( iC == 9  || iC == 10  || iC == 11  ||
+                  iC == 12 || iC == 13  || iC == 14 ) {
+        M = 24;
+      }
+      for (Int_t j = 0; j < M; j++) {
+        histo5->SetBinContent( iC*30+j, refolded[iC]->GetBinContent( j+1 ) );
+        histo5->SetBinError(   iC*30+j, refolded[iC]->GetBinError( j+1 ) );
+        // histogram->SetBinError(   iC*30+j, h3[iC]->GetBinError( j+1 ) );
+      }
+
+    }
+
+
   TFile *SavingFile[24];
   for (Int_t iC = 4; iC < 20; iC++) {
     SavingFile[iC]  = new TFile(Form("Unfolding2D/UnfoldHeV2_%d.root", iC), "RECREATE");
@@ -415,12 +564,15 @@ void UnfoldHe2D(Int_t TriggerFlag = 0, Int_t Iterations = 1){
     PhiGenH   ->Write();
     responsePhi[iC].Write();
     unfolded[iC] ->Write();
-    unfolded1[iC]->Write();
-    unfolded2[iC]->Write();
-    unfolded3[iC]->Write();
+    // unfolded1[iC]->Write();
+    // unfolded2[iC]->Write();
+    // unfolded3[iC]->Write();
     histo[iC]->Write();
     histo2[iC]->Write();
     histo4[iC]->Write();
+    histo5->Write();
+    histo6->Write();
+    histo9->Write();
     SavingFile[iC]->Close();
   }
 

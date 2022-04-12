@@ -223,10 +223,10 @@ void fBkgPolFit(TH1F* histoToBeFit)//, Double_t &bookKeeping[5])
  */
 void fitJPsiTemplateMC(const int selectionFlag = 0, const int selectionFlag2 = 0){
 
-  if (        selectionFlag != 0 ) {
+  if (        selectionFlag > -1 ) {
     fCohJpsiToMu = (TH1F*)parsedMC->Get( Form( "InvMassH_%d_%d", selectionFlag, selectionFlag2 ) );
   } else {
-    fCohJpsiToMu = (TH1F*)parsedMC->Get( "InvMassH_15_10"  );
+    fCohJpsiToMu = (TH1F*)parsedMC->Get( "FullInvMassH"  );
   }
   // fCohJpsiToMu        = (TH1F*)listingsMC[0]->FindObject(Form("fInvariantMassDistributionForSignalExtractionHelicityFrameMyBinningH_%d_%d", selectionFlag, selectionFlag2));
   fCohPsi2sToMu       = (TH1F*)listingsMC[1]->FindObject("fInvariantMassDistributionH");
@@ -294,10 +294,10 @@ void fitJPsiTemplate( const int selectionFlag, const int selectionFlag2, Int_t S
   // TH1F *fInvariantMassDistributionH = 0x0;
   fInvariantMassDistributionH = 0x0;
   // fInvariantMassDistributionH = (TH1F*)listings->FindObject(Form("fInvariantMassDistributionForSignalExtractionHelicityFrameMyBinningH_%d_%d", selectionFlag, selectionFlag2));
-  if (        selectionFlag != 0 ) {
+  if (        selectionFlag > -1 ) {
     fInvariantMassDistributionH = (TH1F*)fileList->Get( Form( "InvMassH_%d_%d", selectionFlag, selectionFlag2 ) );
   } else {
-    fInvariantMassDistributionH = (TH1F*)fileList->Get( "InvMassH_15_10"  );
+    fInvariantMassDistributionH = (TH1F*)fileList->Get( "FullInvMassH"  );
   }
 
   fInvariantMassDistributionH->Rebin(5);
@@ -687,7 +687,7 @@ void fitJPsiTemplate( const int selectionFlag, const int selectionFlag2, Int_t S
 // void CreateCosThetaTh2(const char* AnalysisName, Int_t SignalRangeMode = 0){
 void CreateCosThetaTh2(){
 
-  parsedMC = new TFile("SignalExtractionCoarse/CohHe.root");
+  parsedMC = new TFile("SignalExtractionCoarse/ClosureYields/CohHe.root");
   // fileMC[0] = new TFile("MCtrainResults/2019-09-17/kCohJpsiToMu/AnalysisResults.root");
   fileMC[1] = new TFile("MCtrainResults/2019-09-17/kCohPsi2sToMu/AnalysisResults.root");
   fileMC[2] = new TFile("MCtrainResults/2019-09-17/kCohPsi2sToMuPi/AnalysisResults.root");
@@ -713,7 +713,7 @@ void CreateCosThetaTh2(){
     dirMC[iDirectory]->GetObject("MyOutputContainer", listingsMC[iDirectory]);
   }
 
-  fileList = new TFile("SignalExtractionCoarse/CohHe_data.root");
+  fileList = new TFile("SignalExtractionCoarse/CohHe_data2.root");
 
   TH1F* RawYields[24];
   for (Int_t i = 0; i < 24; i++) {
@@ -759,11 +759,52 @@ void CreateCosThetaTh2(){
       RawYields[iCosThetaBins]->SetBinError(iPhiBins+1, JPsiPeakValueErr);
 
     }
-    TFile f(Form("SignalExtractionCoarse/RawYieldsHeV3_%d.root", iCosThetaBins),   "recreate");
+    TFile f(Form("SignalExtractionCoarse/RawYieldsHeV4_%d.root", iCosThetaBins),   "recreate");
     RawYields[iCosThetaBins]->Write();
     f.Close();
 
   }
+
+
+}
+//++++++++++++++++
+void FullInvMassFit(){
+
+  parsedMC = new TFile("SignalExtractionCoarse/ClosureYields/CohHe.root");
+  fileMC[1] = new TFile("MCtrainResults/2019-09-17/kCohPsi2sToMu/AnalysisResults.root");
+  fileMC[2] = new TFile("MCtrainResults/2019-09-17/kCohPsi2sToMuPi/AnalysisResults.root");
+  fileMC[3] = new TFile("MCtrainResults/2019-09-17/kIncohJpsiToMu/AnalysisResults.root");
+  fileMC[4] = new TFile("MCtrainResults/2019-09-17/kIncohPsi2sToMu/AnalysisResults.root");
+  fileMC[5] = new TFile("MCtrainResults/2019-09-17/kIncohPsi2sToMuPi/AnalysisResults.root");
+  fileMC[6] = new TFile("MCtrainResults/2019-09-17/kTwoGammaToMuHigh/AnalysisResults.root");
+  fileMC[7] = new TFile("MCtrainResults/2019-09-17/kTwoGammaToMuMedium/AnalysisResults.root");
+  // TDirectory* dirMC[8];
+  cout << "CHECKPOINT 4 " << endl << flush;
+
+  for(Int_t iDirectory = 1; iDirectory < 8; iDirectory++) {
+    dirMC[iDirectory] = fileMC[iDirectory]->GetDirectory("MyTask");
+  }
+  for(Int_t iDirectory = 1; iDirectory < 8; iDirectory++) {
+    dirMC[iDirectory]->GetObject("MyOutputContainer", listingsMC[iDirectory]);
+  }
+
+  fileList = new TFile("SignalExtractionCoarse/CohHe_data2.root");
+  fitJPsiTemplateMC(-1, 0);
+  // cout << "CHECKPOINT 2 " << endl << flush;
+
+  fitJPsiTemplate(-1, 0, 0);
+
+
+  TH1F* numerator   = (TH1F*)parsedMC->Get( "FullInvMassH"  );
+  TH1F* denominator = (TH1F*)parsedMC->Get( "FullInvMassHgen"  );
+  cout << "Num  =  " << numerator->GetEntries() << endl;
+  cout << "Den  =  " << denominator->GetEntries() << endl;
+  cout << "AxE  =  " << numerator->GetEntries()/ denominator->GetEntries() << endl;
+  TH1F* numerator2   = (TH1F*)parsedMC->Get( "PhiRecHH"  );
+  TH1F* denominator2 = (TH1F*)parsedMC->Get( "PhiGenHH"  );
+  cout << "Num2  =  " << numerator2->GetEntries() << endl;
+  cout << "Den2  =  " << denominator2->GetEntries() << endl;
+  cout << "AxE2  =  " << numerator2->GetEntries()/ denominator2->GetEntries() << endl;
 
 
 }

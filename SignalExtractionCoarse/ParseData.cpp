@@ -96,6 +96,9 @@ void ParseData(){
   }
 
 
+  TH1F* FullInvMassH = new TH1F("FullInvMassH","FullInvMassH",2000, 0, 20);
+
+
   Double_t controlFlag  = 0;
   Double_t controlFlag2 = 0;
 
@@ -134,6 +137,10 @@ void ParseData(){
                   //--------------------------------------
                   InvMassH[iCosThetaBins][iPhiBins]->Fill(Mrec);
 
+
+
+                  if(iCosThetaBins > 5 && iCosThetaBins < 18) FullInvMassH->Fill(Mrec);
+
     }
   }
 
@@ -155,6 +162,7 @@ void ParseData(){
       InvMassH[i][j]->Write();
     }
   }
+  FullInvMassH     ->Write();
   SavingFile       ->Close();
 
 }

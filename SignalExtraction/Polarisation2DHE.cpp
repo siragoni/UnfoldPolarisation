@@ -414,6 +414,9 @@ void fitJPsiTemplate( const int selectionFlag, const int selectionFlag2, Int_t S
   } else if((selectionFlag == 9) && selectionFlag2 == 19) {
     fFitInvMass->SetParameter(15, 25);
     fFitInvMass->SetParLimits(15, 10, 9999999999);
+  } else if((selectionFlag == 9) && selectionFlag2 == 0) {
+    fFitInvMass->SetParameter(15, 150);
+    fFitInvMass->SetParLimits(15, 50, 1000);
   } else {
     fFitInvMass->SetParameter(15, 1);
   }
